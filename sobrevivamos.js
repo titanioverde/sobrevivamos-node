@@ -1,4 +1,4 @@
-
+//Game core class and procedures.
 
 var Town = new Object();
 Town.contents = {

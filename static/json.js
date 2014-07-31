@@ -33,6 +33,7 @@ function nextWeek() {
 		dataType: "json",
 		success: function(data) {
 			town = data;
+			console.log(town);
 			refreshEverything(town);
 		}
 	});
@@ -40,8 +41,7 @@ function nextWeek() {
 
 $(document).ready(function() {
 	town_id = $("#town_id").attr("value");
-	calling = $.ajax("get_json/" + town_id, {
-		
+	calling = $.ajax("get_json/" + town_id, {		
 		dataType: "json",
 		success: function(data) {
 			town = data;

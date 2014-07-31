@@ -9,37 +9,37 @@ html
 	body
 		h1 Then Let's Survive
 		#controls
-			form(method="post")
-			h5
-				| Week 
-				span#week 0
-			h6
-				| Inhabitants 
-				span#inhabitants 0
-			h6
-				| Idles 
-				span#idles 0
-				
-			div
-				label Gatherers
-				input(type="number", name="gatherers", id="gatherers_control")
-				| Food 
-				span#food 0
-			div
-				label Builders
-				input(type="number", name="builders", id="builders_control")
-				| Structure 
-				span#structure 0
-			div
-				label Defenders
-				input(type="number", name="defenders", id="defenders_control")
-				| Safety 
-				span#safety 0
-			div
-				label Cleaners
-				input(type="number", name="cleaners", id="cleaners_control")
-				| Garbage 
-				span#garbage 0
-				| %
-			input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
-			input(type="submit", id="next_week")
+			form(method="post", action="/send")#mainForm
+				h5
+					| Week 
+					span#week 0
+				h6
+					| Inhabitants 
+					span#inhabitants 0
+				h6
+					| Idles 
+					span#idles 0
+					
+				div
+					label Gatherers
+					input(type="number", name="gatherers", id="gatherers_control")
+					| Food 
+					span#food 0
+				div
+					label Builders
+					input(type="number", name="builders", id="builders_control")
+					| Structure 
+					span#structure 0
+				div
+					label Defenders
+					input(type="number", name="defenders", id="defenders_control")
+					| Safety 
+					span#safety 0
+				div
+					label Cleaners
+					input(type="number", name="cleaners", id="cleaners_control")
+					| Garbage 
+					span#garbage 0
+					| %
+				input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
+				input(type="submit", id="next_week")

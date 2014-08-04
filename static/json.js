@@ -49,6 +49,6 @@ $(document).ready(function() {
 			refreshEverything(town);
 		}
 	});
-	$("input#next_week").off("click").on("click", function(event) { nextWeek(); event.preventDefault(); });
+	$("input#next_week").off("click").on("click", function(event) { event.preventDefault(); nextWeek(); });
 
 });

@@ -4,7 +4,7 @@ exports.Town = function(town) {
 	this.contents = {
 		//Important current attributes
 		"difficulty": town.difficulty | 1,
-		"week": town.week | 1,
+		"week": town.week | 0,
 		"score": town.score | 0,
 		"inhabitants": town.inhabitants | 0,
 		"sheeps": town.sheeps | 0,
@@ -29,7 +29,7 @@ exports.Town = function(town) {
 		"emigrants": town.emigrants | 0
 	}
 	
-	
+	this.statistics = [];
 	
 	
 	
@@ -133,17 +133,21 @@ exports.Town = function(town) {
 	this.inhabitantBirths = function() {
 		if (this.contents["idles"] <= 1) {
 			return 0;
-		}
-		
-		var births = 0;
-		for (var encounter; encounter++; encounter < ((this.contents["idles"] / 4) + 1)) {
-			if (Math.random() > 0.5) {
-				births ++;
+		} else {			
+			var births = 0;
+			console.log("Vagos: " + (this.contents["idles"] / 4));
+			for (var encounter = 0; encounter < ((this.contents["idles"] / 4) + 1); encounter++) {
+				console.log("Orgy!");
+				if (Math.random() > 0.5) {
+					births ++;
+				}
 			}
+			
+			this.contents["inhabitants"] += births;
+			return births;
 		}
 		
-		this.contents["inhabitants"] += births;
-		return births;
+		
 	}
 	
 	//Random number of sheeps born. No more than 5 sheeps per week.
@@ -153,7 +157,7 @@ exports.Town = function(town) {
 		}
 		
 		var births = 0;
-		for (var encounter; encounter++; encounter < (this.contents["sheeps"] / 2)) {
+		for (var encounter = 0; encounter < (this.contents["sheeps"] / 2); encounter++) {
 			if ((Math.random() > 0.7) && (births <= 5)) {
 				births++;
 			}
@@ -190,7 +194,7 @@ exports.Town = function(town) {
 	this.deathByHunger = function() {
 		if (this.foodEaten() > this.contents["food"]) {
 			var inhabitants = 0;
-			for (var death; death++; death < (this.contents["inhabitants"] / 3)) {
+			for (var death = 0; death < (this.contents["inhabitants"] / 3); death++) {
 				if (Math.random() > 0.2) {
 					inhabitants++;
 				}
@@ -244,7 +248,7 @@ exports.Town = function(town) {
 	this.immigrantsBySafety = function() {
 		if (this.contents["safety"] > 50) {
 			var immigrants = 0;
-			for (var incoming; incoming++; incoming < Math.round(this.contents["safety"] / 25) - 1) {
+			for (var incoming = 0; incoming < Math.round(this.contents["safety"] / 25) - 1; incoming++) {
 				if (Math.random() > 0.66) {
 					immigrants++;
 				}
@@ -259,7 +263,8 @@ exports.Town = function(town) {
 	}
 	
 	this.aNewWeek = function() {
-		this.contents["week"] += 1;
+		console.log(this.contents["week"]);
+		this.contents["week"]++;
 		return this.contents["week"];
 	}
 	
@@ -336,29 +341,32 @@ exports.Town = function(town) {
 			"immigrantsBySafety",
 		];
 		
-		with(this) {
-			milkFromSheeps();
-			gatherersWork();
-			buildersWork();
-			defendersEnhance();
-			addedSafety();
-			cleanersWork();
-			deathByHunger();
-			deathsByStructure();
-			deathByGarbage();
-			fleesBySafety();
-			foodEaten();
-			structureNeeded();
-			garbageProduced();
-			inhabitantBirths();
-			sheepBirths();
-			immigrantsBySafety();
-			aNewWeek();
+		if (this.howManyIdles() >= 0) {
+			with(this) {
+				statistics.push(milkFromSheeps());
+				statistics.push(gatherersWork());
+				statistics.push(buildersWork());
+				statistics.push(defendersEnhance());
+				statistics.push(addedSafety());
+				statistics.push(cleanersWork());
+				statistics.push(deathByHunger());
+				statistics.push(deathsByStructure());
+				statistics.push(deathByGarbage());
+				statistics.push(fleesBySafety());
+				statistics.push(foodEaten());
+				statistics.push(structureNeeded());
+				statistics.push(garbageProduced());
+				statistics.push(inhabitantBirths());
+				statistics.push(sheepBirths());
+				statistics.push(immigrantsBySafety());
+				//statistics.push(aNewWeek());
+				contents["week"]++;
+			}
 		}
 		
+		
+		console.log(this.statistics);
 		callback();
-		//ToDo: Convert incoming object to Town? Or process town as arg?
-		//ToDo: How did constructors work?
 		
 	}
 }

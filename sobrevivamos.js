@@ -33,11 +33,11 @@ exports.Town = function(town) {
 	
 	
 	
-	this.posi = function(value) {
-		if (value < 0) {
-			value = 0;
+	this.posi = function(property) {
+		if (this.contents[property] < 0) {
+			this.contents[property] = 0;
 		}
-		return value;
+		this.contents[property] = parseInt(this.contents[property]);
 	}
 	
 	//Just to calculate inhabitants with no job assigned.
@@ -89,6 +89,7 @@ exports.Town = function(town) {
 	this.addedSafety = function() {
 		var safety = (this.contents["defenders"] * 5) + (this.contents["structure"] / 10);
 		this.contents["extraSafety"] = safety;
+		this.posi("extraSafety");
 		return safety;
 	}
 	
@@ -97,6 +98,7 @@ exports.Town = function(town) {
 	this.cleanersWork = function() {
 		var garbageRemoved = this.contents["cleaners"] * 7;
 		this.contents["garbage"] -= garbageRemoved;
+		this.posi("garbage");
 		return garbageRemoved;
 	}
 	
@@ -107,6 +109,7 @@ exports.Town = function(town) {
 					 this.contents["cleaners"]) * 3) +
 					 (this.contents["idles"] * 2);
 		this.contents["food"] -= food;
+		this.posi("food");
 		return food;
 	}
 	
@@ -135,7 +138,6 @@ exports.Town = function(town) {
 			return 0;
 		} else {			
 			var births = 0;
-			console.log("Vagos: " + (this.contents["idles"] / 4));
 			for (var encounter = 0; encounter < ((this.contents["idles"] / 4) + 1); encounter++) {
 				console.log("Orgy!");
 				if (Math.random() > 0.5) {
@@ -182,8 +184,10 @@ exports.Town = function(town) {
 			}
 			
 			this.contents["inhabitants"] -= inhabitants;
+			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
 			this.contents["sheeps"] -= sheeps;
+			this.posi("sheeps");
 			return [inhabitants, sheeps];
 		} else {
 			return [0, 0];
@@ -201,6 +205,7 @@ exports.Town = function(town) {
 			}
 			
 			this.contents["inhabitants"] -= inhabitants;
+			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
 			return inhabitants;
 		} else {
@@ -214,7 +219,9 @@ exports.Town = function(town) {
 			var structure = Math.round(this.contents["structure"] / 20);
 			var food = Math.round(this.contents["food"] / 10);
 			this.contents["food"] -= food;
+			this.posi("food");
 			this.contents["structure"] -= structure;
+			this.posi("structure");
 			return [food, structure];
 		} else {
 			return [0, 0];
@@ -226,6 +233,7 @@ exports.Town = function(town) {
 		if (this.contents["garbage"] > 80) {
 			var inhabitants = 1;
 			this.contents["inhabitants"] -= inhabitants;
+			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
 			return inhabitants;
 		} else {
@@ -238,6 +246,7 @@ exports.Town = function(town) {
 		if (this.contents["safety"] < 10) {
 			var inhabitants = 1;
 			this.contents["inhabitants"] -= inhabitants;
+			this.posi("inhabitants");
 			return inhabitants;
 		} else {
 			return 0;
@@ -278,6 +287,7 @@ exports.Town = function(town) {
 		if (this.contents["safety"] >= 50) {
 			safety = 25;
 			this.contents["safety"] -= safety;
+			this.posi["safety"];
 			result = "safe";
 		} else {
 			this.contents["safety"] = 0;
@@ -287,7 +297,9 @@ exports.Town = function(town) {
 		}
 		
 		this.contents["inhabitants"] -= inhabitants;
+		this.posi["inhabitants"];
 		this.contents["structure"] -= structure;
+		this.posi["structure"];
 		return [result, inhabitants, structure, safety];
 	}
 	
@@ -318,29 +330,10 @@ exports.Town = function(town) {
 		}
 	}
 	
+		
 	//Now to think again how to flow.
 	
 	this.endTurn = function(callback) {
-		var flow = [
-			"milkFromSheeps",
-			"gatherersWork",
-			"buildersWork",
-			"defendersEnhance",
-			"addedSafety",
-			"cleanersWork",
-			"foodEaten",
-			"structureNeeded",
-			"garbageProduced",
-			"deathByHunger",
-			"deathsByStructure",
-			"deathByGarbage",
-			"lossesByGarbage",
-			"fleesBySafety",
-			"inhabitantBirths",
-			"sheepBirths",
-			"immigrantsBySafety",
-		];
-		
 		if (this.howManyIdles() >= 0) {
 			with(this) {
 				statistics.push(milkFromSheeps());
@@ -348,14 +341,14 @@ exports.Town = function(town) {
 				statistics.push(buildersWork());
 				statistics.push(defendersEnhance());
 				statistics.push(addedSafety());
-				statistics.push(cleanersWork());
 				statistics.push(deathByHunger());
 				statistics.push(deathsByStructure());
-				statistics.push(deathByGarbage());
 				statistics.push(fleesBySafety());
 				statistics.push(foodEaten());
 				statistics.push(structureNeeded());
 				statistics.push(garbageProduced());
+				statistics.push(cleanersWork());
+				statistics.push(deathByGarbage());
 				statistics.push(inhabitantBirths());
 				statistics.push(sheepBirths());
 				statistics.push(immigrantsBySafety());

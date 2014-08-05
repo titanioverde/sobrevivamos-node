@@ -115,8 +115,7 @@ exports.Town = function(town) {
 	
 	//Static structure requirement for the current crowd.
 	this.structureNeeded = function() {
-		var structure = (this.contents["inhabitants"] * 2) +
-						this.contents["sheeps"];
+		var structure = (this.contents["inhabitants"] * 2) + this.contents["sheeps"];
 		return structure;
 	}
 	
@@ -125,8 +124,7 @@ exports.Town = function(town) {
 		var garbage = ((this.contents["gatherers"] +
 						this.contents["defenders"]) * 2) +
 						(this.contents["builders"] * 3) +
-						this.contents["sheeps"] +
-						this.contents["idles"];
+						this.contents["sheeps"] + this.contents["idles"];
 		garbage = garbage + (Math.round(this.contents["inhabitants"] / 15) * 4);
 		this.contents["garbage"] += garbage;
 		return garbage;
@@ -287,7 +285,7 @@ exports.Town = function(town) {
 		if (this.contents["safety"] >= 50) {
 			safety = 25;
 			this.contents["safety"] -= safety;
-			this.posi["safety"];
+			this.posi(["safety"]);
 			result = "safe";
 		} else {
 			this.contents["safety"] = 0;
@@ -297,9 +295,9 @@ exports.Town = function(town) {
 		}
 		
 		this.contents["inhabitants"] -= inhabitants;
-		this.posi["inhabitants"];
+		this.posi(["inhabitants"]);
 		this.contents["structure"] -= structure;
-		this.posi["structure"];
+		this.posi(["structure"]);
 		return [result, inhabitants, structure, safety];
 	}
 	

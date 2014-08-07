@@ -20,6 +20,7 @@ function refreshEverything(town) {
 	refreshSpan("week", town);
 	refreshSpan("inhabitants", town);
 	refreshSpan("idles", town);
+	refreshSpan("sheeps", town);
 	for (var resource in main_resources) {
 		refreshSpan(main_resources[resource], town);
 	}
@@ -39,6 +40,20 @@ function nextWeek() {
 	});
 }
 
+function killSheep() {
+	town_id = $("#town_id").attr("value");
+	$.ajax("killSheep/" + town_id, {
+		data: "town_id=" + town_id,
+		dataType: "json",
+		type: "get",
+		success: function(data) {
+			var for_web = data;
+			console.log(for_web);
+			refreshEverything(for_web.town);
+		}
+	});
+}
+
 $(document).ready(function() {
 	town_id = $("#town_id").attr("value");
 	calling = $.ajax("get_json/" + town_id, {		
@@ -50,5 +65,6 @@ $(document).ready(function() {
 		}
 	});
 	$("input#next_week").off("click").on("click", function(event) { event.preventDefault(); nextWeek(); });
+	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); })
 
 });

@@ -1,6 +1,7 @@
 //Game core class and procedures.
 
 exports.Town = function(town) {
+	console.log(town);
 	this.contents = {
 		//Important current attributes
 		"difficulty": town.difficulty | 1,
@@ -301,31 +302,31 @@ exports.Town = function(town) {
 		return [result, inhabitants, structure, safety];
 	}
 	
-	//Manually butching a sheep for a profit.
-	this.killSheep = function() {
+	//Manually butchering a sheep for a profit.
+	this.killSheep = function(callback) {
+		var output = {
+			"food": 0,
+			"safety": 0,
+			"garbage": 0,
+			"result": "unavailable"
+		};
 		if (this.contents["sheeps"] > 0) {
 			this.contents["sheeps"] -= 1;
-			var food = 0,
-				safety = 0,
-				garbage = 0,
-				result = undefined;
 			
 			if (Math.random() < 0.15) {
-				garbage = 10;
-				result = "sick";
+				output.garbage = 10;
+				output.result = "sick";
 			} else {
-				food = 15;
-				safety = 5;
-				result = "success";
+				output.food = 15;
+				output.safety = 5;
+				output.result = "success";
 			}
 			
-			this.contents["food"] += food;
-			this.contents["safety"] += safety;
-			this.contents["garbage"] += garbage;
-			return [result, food, safety, garbage];
-		} else {
-			return ["unavailable", 0, 0, 0];
+			this.contents["food"] += output.food;
+			this.contents["safety"] += output.safety;
+			this.contents["garbage"] += output.garbage;
 		}
+		callback(output);
 	}
 	
 		

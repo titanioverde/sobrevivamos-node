@@ -137,7 +137,6 @@ exports.Town = function(town) {
 		} else {			
 			var births = 0;
 			for (var encounter = 0; encounter < ((this.contents["idles"] / 4) + 1); encounter++) {
-				console.log("Orgy!");
 				if (Math.random() > 0.5) {
 					births ++;
 				}

@@ -10,9 +10,9 @@ function refreshForm(town) {
 	for (var job in main_jobs) {
 		job_name = main_jobs[job];
 		target = "input[name=" + job_name + "]";
-		$(target).attr("value", town[job_name]);
-		$(target).attr("min", 0);
-		$(target).attr("max", town["inhabitants"]);
+		$(target)[0].value = town[job_name];
+		$(target)[0].min = 0;
+		$(target)[0].max = town["inhabitants"];
 	}
 }
 
@@ -27,17 +27,33 @@ function refreshEverything(town) {
 	refreshForm(town);
 }
 
+function refreshIdles(town) {
+	town.idles = town.inhabitants;
+	for (var i in main_jobs) {
+		var job = main_jobs[i];
+		town[job] = $("input[name=" + job + "]")[0].value;
+		town.idles -= town[job];
+	}
+	refreshSpan("idles", town);
+}
+
 function nextWeek() {
-	$.ajax("/send", {
-		data: $("#mainForm").serialize(),
-		type: "post",
-		dataType: "json",
-		success: function(data) {
-			town = data;
-			console.log(town);
-			refreshEverything(town);
-		}
-	});
+	if (town.idles < 0) {
+		$("span#idles").addClass("warning_fail");
+		setTimeout(function() { $("span#idles").removeClass("warning_fail") }, 3000);
+	} else {
+		$.ajax("/send", {
+			data: $("#mainForm").serialize(),
+			type: "post",
+			dataType: "json",
+			success: function(data) {
+				town = data;
+				console.log(town);
+				refreshEverything(town);
+			}
+		});
+	}
+	
 }
 
 function killSheep() {
@@ -60,6 +76,7 @@ function killSheep() {
 	});
 }
 
+
 $(document).ready(function() {
 	town_id = $("#town_id").attr("value");
 	calling = $.ajax("get_json/" + town_id, {		
@@ -70,7 +87,8 @@ $(document).ready(function() {
 			refreshEverything(town);
 		}
 	});
-	$("input#next_week").off("click").on("click", function(event) { event.preventDefault(); nextWeek(); });
-	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); })
+	$("input#next_week").off("click").on("click", function(event) { event.preventDefault(); refreshIdles(town); nextWeek(); });
+	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); });
+	$("input[type=number]").on("change", function(event) { refreshIdles(town); }).on("keyup", function(event) { refreshIdles(town) });
 
 });

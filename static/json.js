@@ -42,6 +42,7 @@ function nextWeek() {
 
 function killSheep() {
 	town_id = $("#town_id").attr("value");
+	$("span#sheeps").removeClass("warning_success warning_fail");
 	$.ajax("killSheep/" + town_id, {
 		data: "town_id=" + town_id,
 		dataType: "json",
@@ -50,6 +51,11 @@ function killSheep() {
 			var for_web = data;
 			console.log(for_web);
 			refreshEverything(for_web.town);
+			if (for_web.output.result == "success") {
+				$("span#sheeps").addClass("warning_success");
+			} else {
+				$("span#sheeps").addClass("warning_fail");
+			}
 		}
 	});
 }

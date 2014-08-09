@@ -1,7 +1,6 @@
 //Game core class and procedures.
 
 exports.Town = function(town) {
-	console.log(town);
 	this.contents = {
 		//Important current attributes
 		"difficulty": town.difficulty | 1,
@@ -271,7 +270,6 @@ exports.Town = function(town) {
 	}
 	
 	this.aNewWeek = function() {
-		console.log(this.contents["week"]);
 		this.contents["week"]++;
 		return this.contents["week"];
 	}
@@ -301,6 +299,8 @@ exports.Town = function(town) {
 		this.posi(["structure"]);
 		return [result, inhabitants, structure, safety];
 	}
+	
+	//From here: functions with callback. (May I consider them "API"?)
 	
 	//Manually butchering a sheep for a profit.
 	this.killSheep = function(callback) {

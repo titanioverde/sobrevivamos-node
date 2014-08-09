@@ -3,6 +3,7 @@ html
 
 	head
 		title Then Let's Survive
+		link(rel="stylesheet", href="default.css")
 		script(src="jquery.min.js")
 		script(src="json.js")
 		
@@ -11,38 +12,38 @@ html
 		#controls
 			form(method="post")#mainForm
 				h5
-					| Week 
-					span#week &nbsp;0
+					| Week&nbsp;
+					span#week 0
 				h6
-					| Inhabitants 
-					span#inhabitants &nbsp;0
+					| Inhabitants&nbsp;
+					span#inhabitants 0
 				h6
-					| Idles 
-					span#idles &nbsp;0
+					| Idles&nbsp;
+					span#idles 0
 				h6
-					| Sheeps
-					span#sheeps &nbsp;0
+					| Sheeps&nbsp;
+					span#sheeps 0
 					button(id="killSheep") Butcher
 					
 				div
 					label Gatherers
 					input(type="number", name="gatherers", id="gatherers_control")
-					| Food 
+					| Food&nbsp;
 					span#food 0
 				div
 					label Builders
 					input(type="number", name="builders", id="builders_control")
-					| Structure 
+					| Structure&nbsp;
 					span#structure 0
 				div
 					label Defenders
 					input(type="number", name="defenders", id="defenders_control")
-					| Safety 
+					| Safety&nbsp;
 					span#safety 0
 				div
 					label Cleaners
 					input(type="number", name="cleaners", id="cleaners_control")
-					| Garbage 
+					| Garbage&nbsp;
 					span#garbage 0
 					| %
 				input(type="hidden", id="town_id", name="town_id", value="#{town_id}")

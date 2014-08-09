@@ -1,0 +1,21 @@
+@keyframes success {
+	from { color: lime; }
+	to { color: black; }
+}
+
+@keyframes fail {
+	from { color: red; }
+	to { color: black; }
+}
+
+span {
+	animation-duration: 2s;
+}
+
+.warning_success {
+	animation-name: success;
+}
+
+.warning_fail {
+	animation-name: fail;
+}

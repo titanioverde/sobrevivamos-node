@@ -15,6 +15,14 @@ app.set("views", cwd + "views");
 
 var client = redis.createClient();
 
+var arrayList = function(array) {
+	var result = "";
+	for (var i in array) {
+		result = result + " \"" + array[i] + "\"";
+	}
+	return result;
+}
+
 app.get("/redget", function(req, res) {
 	var result = client.get("gundams:dragon", function (err, replies) {
 		res.json(replies);
@@ -27,8 +35,13 @@ app.get("/controls", function(req, res) {
 
 app.get("/get_json/:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
-		var town = JSON.parse(replies);
-		res.json(town);
+		var contents = JSON.parse(replies);
+		var result2 = client.lrange("town" + req.params.town_id, 0, 19, function (err, replies) {
+			console.log(replies);
+			var reports = replies;
+			var town = {"contents": contents, "reports": reports};
+			res.json(town);
+		});
 	});
 });
 
@@ -48,7 +61,11 @@ app.post("/send", express.bodyParser(), function(req, res) {
 		new_town.endTurn(function() {
 			var change = client.set("towns:" + workers["town_id"], JSON.stringify(new_town.contents), function (err, replies) {
 				if (replies == "OK") {
-					res.json(new_town.contents);
+					//var textReports = arrayList(new_town.reports);
+					var change2 = client.lpush("town" + workers["town_id"], new_town.reports, function (err, replies) {
+						res.json(new_town);
+					});
+					
 				}
 			});
 		});

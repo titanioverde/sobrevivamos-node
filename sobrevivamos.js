@@ -30,7 +30,7 @@ exports.Town = function(town) {
 	}
 	
 	this.statistics = [];
-	
+	this.reports = [];
 	
 	
 	this.posi = function(property) {
@@ -138,11 +138,12 @@ exports.Town = function(town) {
 			var births = 0;
 			for (var encounter = 0; encounter < ((this.contents["idles"] / 4) + 1); encounter++) {
 				if (Math.random() > 0.5) {
-					births ++;
+					births++;
 				}
 			}
 			
 			this.contents["inhabitants"] += births;
+			this.addReport("Newborn inhabitants", births);
 			return births;
 		}
 		
@@ -163,6 +164,7 @@ exports.Town = function(town) {
 		}
 		
 		this.contents["sheeps"] += births;
+		this.addReport("Newborn sheeps", births);
 		return births;
 	}
 	
@@ -185,6 +187,10 @@ exports.Town = function(town) {
 			this.contents["deaths"] += inhabitants;
 			this.contents["sheeps"] -= sheeps;
 			this.posi("sheeps");
+			
+			this.addReport("Dead inhabitants by pulmony", inhabitants);
+			this.addReport("Dead sheeps by pulmony", sheeps);
+			
 			return [inhabitants, sheeps];
 		} else {
 			return [0, 0];
@@ -204,6 +210,7 @@ exports.Town = function(town) {
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
+			this.addReport("Dead inhabitants by hunger", inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -215,10 +222,13 @@ exports.Town = function(town) {
 		if (this.contents["garbage"] > 40) {
 			var structure = Math.round(this.contents["structure"] / 20);
 			var food = Math.round(this.contents["food"] / 10);
+			
 			this.contents["food"] -= food;
 			this.posi("food");
 			this.contents["structure"] -= structure;
 			this.posi("structure");
+			
+			this.reports.push("Food and structure slightly damaged due to contamination.");
 			return [food, structure];
 		} else {
 			return [0, 0];
@@ -232,6 +242,8 @@ exports.Town = function(town) {
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
+			
+			this.addReport("Dead inhabitants by high contamination", inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -244,6 +256,8 @@ exports.Town = function(town) {
 			var inhabitants = 1;
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
+			
+			this.addReport("Fled inhabitants due to lack of safety", inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -262,9 +276,17 @@ exports.Town = function(town) {
 			
 			this.contents["inhabitants"] += immigrants;
 			this.contents["immigrants"] += immigrants;
+			
+			this.addReport("Incoming immigrants", immigrants);
 			return immigrants;
 		} else {
 			return 0;
+		}
+	}
+	
+	this.addReport = function(text, number) {
+		if (number != 0) {
+			this.reports.push(text + ": " + number);
 		}
 	}
 	

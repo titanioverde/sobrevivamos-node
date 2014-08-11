@@ -1,4 +1,5 @@
 var town = {};
+var reports = [];
 var main_jobs = ["gatherers", "builders", "defenders", "cleaners"],
 	main_resources = ["food", "structure", "safety", "garbage"];
 
@@ -52,7 +53,8 @@ function nextWeek() {
 			type: "post",
 			dataType: "json",
 			success: function(data) {
-				town = data;
+				town = data.contents;
+				reports.push(data.reports);
 				console.log(town);
 				refreshEverything(town);
 			}
@@ -91,7 +93,8 @@ $(document).ready(function() {
 	calling = $.ajax("get_json/" + town_id, {		
 		dataType: "json",
 		success: function(data) {
-			town = data;
+			town = data.contents;
+			reports = data.reports;
 			console.log(town);
 			refreshEverything(town);
 		}

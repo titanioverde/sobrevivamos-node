@@ -15,11 +15,12 @@ app.set("views", cwd + "views");
 
 var client = redis.createClient();
 
-var arrayList = function(array) {
-	var result = "";
+var reportFromList = function(array, number) {
+	var result = "Week " + number + " - ";
 	for (var i in array) {
-		result = result + " \"" + array[i] + "\"";
+		result = result + array[i] + ". ";
 	}
+	result += "<br />";
 	return result;
 }
 
@@ -36,7 +37,7 @@ app.get("/controls", function(req, res) {
 app.get("/get_json/:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
 		var contents = JSON.parse(replies);
-		var result2 = client.lrange("town" + req.params.town_id, 0, 19, function (err, replies) {
+		var result2 = client.lrange("town" + req.params.town_id, 0, 2, function (err, replies) {
 			console.log(replies);
 			var reports = replies;
 			var town = {"contents": contents, "reports": reports};
@@ -61,9 +62,9 @@ app.post("/send", express.bodyParser(), function(req, res) {
 		new_town.endTurn(function() {
 			var change = client.set("towns:" + workers["town_id"], JSON.stringify(new_town.contents), function (err, replies) {
 				if (replies == "OK") {
-					//var textReports = arrayList(new_town.reports);
-					var change2 = client.lpush("town" + workers["town_id"], new_town.reports, function (err, replies) {
-						res.json(new_town);
+					var textReports = reportFromList(new_town.reports, new_town.contents.week);
+					var change2 = client.lpush("town" + workers["town_id"], textReports, function (err, replies) {
+						res.send(200);
 					});
 					
 				}
@@ -78,8 +79,7 @@ app.get("/killSheep/:town_id", function(req, res) {
 		var new_town = new sobrevivamos.Town(town);
 		new_town.killSheep(function(output) {
 			var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function (err, replies) {
-				var for_web = {"town": new_town.contents, "output": output};
-				res.json(for_web);
+				res.send(output);
 			});
 		});
 	});

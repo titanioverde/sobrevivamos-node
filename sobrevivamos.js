@@ -369,6 +369,7 @@ exports.Town = function(town) {
 				statistics.push(garbageProduced());
 				statistics.push(cleanersWork());
 				statistics.push(deathByGarbage());
+				statistics.push(lossesByGarbage());
 				statistics.push(inhabitantBirths());
 				statistics.push(sheepBirths());
 				statistics.push(immigrantsBySafety());

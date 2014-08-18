@@ -1,5 +1,5 @@
 var town = {};
-var reports = [];
+var reports = "";
 var main_jobs = ["gatherers", "builders", "defenders", "cleaners"],
 	main_resources = ["food", "structure", "safety", "garbage"];
 
@@ -20,7 +20,7 @@ function refreshForm(town) {
 }
 
 //Show current values. Grabbed from town local object
-function refreshEverything(town) {
+function refreshEverything(town, reports) {
 	refreshSpan("week", town);
 	refreshSpan("inhabitants", town);
 	refreshIdles(town);
@@ -29,6 +29,7 @@ function refreshEverything(town) {
 		refreshSpan(main_resources[resource], town);
 	}
 	refreshForm(town);
+	refreshReports(reports);
 }
 
 //Inhabitants - workers
@@ -42,53 +43,59 @@ function refreshIdles(town) {
 	refreshSpan("idles", town);
 }
 
+//Renders reports about town's last weeks.
+function refreshReports(reports) {
+	$("#reports").html(reports);
+}
+
 //Send form values to Node server.
 function nextWeek() {
 	if (town.idles < 0) {
 		$("span#idles").addClass("warning_fail");
-		setTimeout(function() { $("span#idles").removeClass("warning_fail") }, 3000);
+		setTimeout(function() { $("span#idles").removeClass("warning_fail") }, 2100);
 	} else {
 		$.ajax("/send", {
 			data: $("#mainForm").serialize(),
 			type: "post",
-			dataType: "json",
-			success: function(data) {
-				town = data.contents;
-				reports.push(data.reports);
-				console.log(town);
-				refreshEverything(town);
-			}
+			error: function(data, text, status) {
+				$("#reports").html(text + " " + status);
+			},
+			success: function() {
+				getJSON();
+			},
+			
 		});
 	}
-	
 }
 
 //Node function with the same name.
 function killSheep() {
-	town_id = $("#town_id").attr("value");
-	$("span#sheeps").removeClass("warning_success warning_fail");
-	$.ajax("killSheep/" + town_id, {
-		data: "town_id=" + town_id,
-		dataType: "json",
-		type: "get",
-		success: function(data) {
-			var for_web = data;
-			town = for_web.town;
-			refreshSpan("sheeps", town);
-			for (var res in main_resources) {
-				refreshSpan(main_resources[res], town);
+	if (town.sheeps <= 0) {
+		$("span#sheeps").addClass("warning_fail");
+		setTimeout(function() { $("span#sheeps").removeClass("warning_success warning_fail"); }, 2100);
+	} else {
+		town_id = $("#town_id").attr("value");
+		$("span#sheeps").removeClass("warning_success warning_fail");
+		$.ajax("killSheep/" + town_id, {
+			data: "town_id=" + town_id,
+			type: "get",
+			success: function(data) {
+				var output = data;
+				getJSON(function() {
+					if (output.result == "success") {
+						$("span#sheeps").addClass("warning_success");
+					} else {
+						$("span#sheeps").addClass("warning_fail");
+					}
+	
+				});
 			}
-			if (for_web.output.result == "success") {
-				$("span#sheeps").addClass("warning_success");
-			} else {
-				$("span#sheeps").addClass("warning_fail");
-			}
-		}
-	});
+		});
+	}
 }
 
-
-$(document).ready(function() {
+//Get all info at every change.
+function getJSON(callback) {
 	town_id = $("#town_id").attr("value");
 	calling = $.ajax("get_json/" + town_id, {		
 		dataType: "json",
@@ -96,9 +103,17 @@ $(document).ready(function() {
 			town = data.contents;
 			reports = data.reports;
 			console.log(town);
-			refreshEverything(town);
+			refreshEverything(town, reports);
+			if (typeof(callback) == "function") {
+				callback();
+			}
 		}
 	});
+}
+
+
+$(document).ready(function() {
+	getJSON();
 	$("input#next_week").off("click").on("click", function(event) { event.preventDefault(); refreshIdles(town); nextWeek(); });
 	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); });
 	$("input[type=number]").on("change", function(event) { refreshIdles(town); }).on("keyup", function(event) { refreshIdles(town) });

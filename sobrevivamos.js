@@ -19,6 +19,10 @@ exports.Town = function(town) {
 		"idles": town.idles | 0,
 		"extraSafety": town.extraSafety | 0,
 		
+		//Disaster statistics
+		"weeksWithoutDisaster": town.weeksWithoutDisaster | (6 - (town.difficulty * 2)),
+		"nextDisaster": town.nextDisaster | "Storm",
+		
 		//Options
 		"allowForeigners": town.allowForeigners | false,
 		
@@ -31,6 +35,7 @@ exports.Town = function(town) {
 	
 	this.statistics = [];
 	this.reports = [];
+	this.disasterList = ["Storm"];
 	
 	
 	this.posi = function(property) {
@@ -115,7 +120,7 @@ exports.Town = function(town) {
 	
 	//Static structure requirement for the current crowd.
 	this.structureNeeded = function() {
-		var structure = (this.contents["inhabitants"] * 2) + this.contents["sheeps"];
+		var structure = (this.contents["inhabitants"] * 6) + this.contents["sheeps"];
 		return structure;
 	}
 	
@@ -178,7 +183,7 @@ exports.Town = function(town) {
 				inhabitants++;
 			}
 			
-			if ((this.contents["sheeps"] > 0) && (Math.random() > 0.7)) {
+			if ((this.contents["sheeps"] > 0) && (Math.random() > 0.8)) {
 				sheeps++;
 			}
 			
@@ -285,14 +290,41 @@ exports.Town = function(town) {
 	}
 	
 	this.addReport = function(text, number) {
-		if (number != 0) {
-			this.reports.push(text + ": " + number);
+		if (number) {
+			this.reports.push(text + ": " + number + ".");
+		} else {
+			this.reports.push(text + ".");
 		}
 	}
 	
 	this.aNewWeek = function() {
 		this.contents["week"]++;
 		return this.contents["week"];
+	}
+	
+	this.disasterComing = function() {
+		console.log("Weeks: " + this.contents["weeksWithoutDisaster"]);
+		var result = [];
+		this.contents["weeksWithoutDisaster"] -= 1;
+		console.log("Weeks: " + this.contents["weeksWithoutDisaster"]);
+		if (this.contents["weeksWithoutDisaster"] == 1) {
+			this.addReport("A " + this.contents["nextDisaster"] + " is approaching. We shall get protected");
+		}
+		if (this.contents["weeksWithoutDisaster"] < 1) {
+			this.contents["weeksWithoutDisaster"] = 6 - (this.contents["difficulty"] * 2);
+			console.log("tooom!");
+			switch (this.contents["nextDisaster"]) {
+				case "Storm":
+					result = this.disasterStorm();
+					break;
+				
+				default:
+					break;
+			}
+			
+		}
+		console.log("Weeks: " + this.contents["weeksWithoutDisaster"]);
+		return result;
 	}
 	
 	//When a storm has come. Returned values will be deducted from town.
@@ -306,11 +338,13 @@ exports.Town = function(town) {
 			safety = 25;
 			this.contents["safety"] -= safety;
 			this.posi(["safety"]);
+			this.addReport("A storm fell here. Your town was safe enough to prevent significant damages");
 			result = "safe";
 		} else {
 			this.contents["safety"] = 0;
 			inhabitants = 2 + Math.round(Math.random() * 3);
 			structure = 20;
+			this.addReport("A storm fell here. Structure damaged. Dead inhabitants", inhabitants);
 			result = "bad";
 		}
 		
@@ -373,6 +407,7 @@ exports.Town = function(town) {
 				statistics.push(inhabitantBirths());
 				statistics.push(sheepBirths());
 				statistics.push(immigrantsBySafety());
+				statistics.push(disasterComing());
 				//statistics.push(aNewWeek());
 				contents["week"]++;
 			}

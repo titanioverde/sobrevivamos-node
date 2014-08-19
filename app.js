@@ -18,7 +18,7 @@ var client = redis.createClient();
 var reportFromList = function(array, number) {
 	var result = "Week " + number + " - ";
 	for (var i in array) {
-		result = result + array[i] + ". ";
+		result = result + array[i] + " ";
 	}
 	result += "<br />";
 	return result;
@@ -40,6 +40,7 @@ app.get("/get_json/:town_id", function(req, res) {
 		var result2 = client.lrange("town" + req.params.town_id, 0, 2, function (err, replies) {
 			console.log(replies);
 			var reports = replies;
+			client.ltrim("town" + req.params.town_id, 0, 2);
 			var town = {"contents": contents, "reports": reports};
 			res.json(town);
 		});

@@ -10,6 +10,8 @@ exports.Town = function(town) {
 		"sheeps": town.sheeps | 0,
 		"food": town.food | 0,
 		"structure": town.structure | 0,
+		"baseSafety": town.baseSafety | 0,
+		"extraSafety": town.extraSafety | 0,
 		"safety": town.safety | 0,
 		"garbage": town.garbage | 0,
 		"gatherers": town.gatherers | 0,
@@ -17,11 +19,10 @@ exports.Town = function(town) {
 		"defenders": town.defenders | 0,
 		"cleaners": town.cleaners | 0,
 		"idles": town.idles | 0,
-		"extraSafety": town.extraSafety | 0,
 		
 		//Disaster statistics
-		"weeksWithoutDisaster": town.weeksWithoutDisaster | (6 - (town.difficulty * 2)),
-		"nextDisaster": town.nextDisaster | "Storm",
+		"weeksWithoutDisaster": town.weeksWithoutDisaster,
+		"nextDisaster": town.nextDisaster | 0,
 		
 		//Options
 		"allowForeigners": town.allowForeigners | false,
@@ -86,7 +87,7 @@ exports.Town = function(town) {
 	//Static and permanent profit from Defenders.
 	this.defendersEnhance = function() {
 		var safety = this.contents["defenders"];
-		this.contents["safety"] += safety;
+		this.contents["baseSafety"] += safety;
 		return safety;
 	}
 	
@@ -95,6 +96,13 @@ exports.Town = function(town) {
 		var safety = (this.contents["defenders"] * 5) + (this.contents["structure"] / 10);
 		this.contents["extraSafety"] = safety;
 		this.posi("extraSafety");
+		return safety;
+	}
+	
+	//Whole Safety value.
+	this.wholeSafety = function() {
+		var safety = (this.contents["baseSafety"] + this.contents["extraSafety"]);
+		this.contents["safety"] = safety;
 		return safety;
 	}
 	
@@ -303,27 +311,31 @@ exports.Town = function(town) {
 	}
 	
 	this.disasterComing = function() {
-		console.log("Weeks: " + this.contents["weeksWithoutDisaster"]);
-		var result = [];
-		this.contents["weeksWithoutDisaster"] -= 1;
-		console.log("Weeks: " + this.contents["weeksWithoutDisaster"]);
-		if (this.contents["weeksWithoutDisaster"] == 1) {
-			this.addReport("A " + this.contents["nextDisaster"] + " is approaching. We shall get protected");
+		this.contents["weeksWithoutDisaster"]--;
+		var weeks = this.contents["weeksWithoutDisaster"];
+		if (weeks < 0) {
+			console.log("jarl");
+			this.contents["weeksWithoutDisaster"] = 8 - parseInt(this.contents["difficulty"] * 2);
 		}
-		if (this.contents["weeksWithoutDisaster"] < 1) {
-			this.contents["weeksWithoutDisaster"] = 6 - (this.contents["difficulty"] * 2);
+		
+		var result = [];
+		if (weeks == 1) {
+			this.addReport("A " + this.disasterList[this.contents["nextDisaster"]] + " is approaching. We shall get protected");
+		}
+		if (weeks == 0) {
+			this.contents["weeksWithoutDisaster"] = 8 - parseInt(this.contents["difficulty"] * 2);
 			console.log("tooom!");
 			switch (this.contents["nextDisaster"]) {
-				case "Storm":
+				case 0:
 					result = this.disasterStorm();
 					break;
 				
 				default:
 					break;
 			}
+			this.wholeSafety();
 			
 		}
-		console.log("Weeks: " + this.contents["weeksWithoutDisaster"]);
 		return result;
 	}
 	
@@ -336,12 +348,12 @@ exports.Town = function(town) {
 		
 		if (this.contents["safety"] >= 50) {
 			safety = 25;
-			this.contents["safety"] -= safety;
+			this.contents["baseSafety"] -= safety;
 			this.posi(["safety"]);
 			this.addReport("A storm fell here. Your town was safe enough to prevent significant damages");
 			result = "safe";
 		} else {
-			this.contents["safety"] = 0;
+			this.contents["baseSafety"] = 0;
 			inhabitants = 2 + Math.round(Math.random() * 3);
 			structure = 20;
 			this.addReport("A storm fell here. Structure damaged. Dead inhabitants", inhabitants);
@@ -378,8 +390,9 @@ exports.Town = function(town) {
 			}
 			
 			this.contents["food"] += output.food;
-			this.contents["safety"] += output.safety;
+			this.contents["baseSafety"] += output.safety;
 			this.contents["garbage"] += output.garbage;
+			this.wholeSafety();
 		}
 		callback(output);
 	}
@@ -395,6 +408,7 @@ exports.Town = function(town) {
 				statistics.push(buildersWork());
 				statistics.push(defendersEnhance());
 				statistics.push(addedSafety());
+				statistics.push(wholeSafety());
 				statistics.push(deathByHunger());
 				statistics.push(deathsByStructure());
 				statistics.push(fleesBySafety());

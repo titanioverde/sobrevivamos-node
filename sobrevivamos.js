@@ -297,11 +297,21 @@ exports.Town = function(town) {
 		}
 	}
 	
+	//Adds a little format to reports and pushes to an array.
 	this.addReport = function(text, number) {
-		if (number) {
-			this.reports.push(text + ": " + number + ".");
-		} else {
+		if (typeof(number) == "number") {
+			if (number > 0) {
+				this.reports.push(text + ": " + number + ".");
+			}
+		}
+		else {
 			this.reports.push(text + ".");
+		}
+	}
+	
+	this.finishReport = function() {
+		if (this.reports.length < 1) {
+			this.addReport("Time flows away..");
 		}
 	}
 	

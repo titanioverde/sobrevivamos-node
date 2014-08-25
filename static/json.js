@@ -60,8 +60,11 @@ function nextWeek() {
 			error: function(data, text, status) {
 				$("#reports").html(text + " " + status);
 			},
+			beforeSend: function() {
+				$("input#next_week").attr("disabled", "true");
+			},
 			success: function() {
-				getJSON();
+				getJSON($("input#next_week").removeAttr("disabled"));
 			},
 			
 		});
@@ -79,6 +82,9 @@ function killSheep() {
 		$.ajax("killSheep/" + town_id, {
 			data: "town_id=" + town_id,
 			type: "get",
+			beforeSend: function(data) {
+				$("button#killSheep").attr("disabled", "true");
+			},
 			success: function(data) {
 				var output = data;
 				getJSON(function() {
@@ -87,6 +93,7 @@ function killSheep() {
 					} else {
 						$("span#sheeps").addClass("warning_fail");
 					}
+					$("button#killSheep").removeAttr("disabled");
 	
 				});
 			}

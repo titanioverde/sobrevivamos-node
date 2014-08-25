@@ -310,21 +310,16 @@ exports.Town = function(town) {
 		return this.contents["week"];
 	}
 	
+	//Checks counter of weeks before a disaster. If 1, warning for next week. If 0, calls upon disaster and resets counter.
 	this.disasterComing = function() {
 		this.contents["weeksWithoutDisaster"]--;
 		var weeks = this.contents["weeksWithoutDisaster"];
-		if (weeks < 0) {
-			console.log("jarl");
-			this.contents["weeksWithoutDisaster"] = 8 - parseInt(this.contents["difficulty"] * 2);
-		}
 		
 		var result = [];
 		if (weeks == 1) {
 			this.addReport("A " + this.disasterList[this.contents["nextDisaster"]] + " is approaching. We shall get protected");
 		}
 		if (weeks == 0) {
-			this.contents["weeksWithoutDisaster"] = 8 - parseInt(this.contents["difficulty"] * 2);
-			console.log("tooom!");
 			switch (this.contents["nextDisaster"]) {
 				case 0:
 					result = this.disasterStorm();
@@ -336,6 +331,11 @@ exports.Town = function(town) {
 			this.wholeSafety();
 			
 		}
+		
+		if (weeks <= 0) {
+			this.contents["weeksWithoutDisaster"] = parseInt(7 + (Math.random() * 5) - (this.contents["difficulty"] * 2));
+		}
+		
 		return result;
 	}
 	

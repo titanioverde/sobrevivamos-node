@@ -23,12 +23,12 @@ function refreshForm(town) {
 function refreshEverything(town, reports) {
 	refreshSpan("week", town);
 	refreshSpan("inhabitants", town);
+	refreshForm(town);
 	refreshIdles(town);
 	refreshSpan("sheeps", town);
 	for (var resource in main_resources) {
 		refreshSpan(main_resources[resource], town);
 	}
-	refreshForm(town);
 	refreshReports(reports);
 }
 

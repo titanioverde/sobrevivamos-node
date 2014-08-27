@@ -30,6 +30,7 @@ function refreshEverything(town, reports) {
 		refreshSpan(main_resources[resource], town);
 	}
 	refreshReports(reports);
+	gameIsOver(town);
 }
 
 //Inhabitants - workers
@@ -46,6 +47,13 @@ function refreshIdles(town) {
 //Renders reports about town's last weeks.
 function refreshReports(reports) {
 	$("#reports").html(reports);
+}
+
+function gameIsOver(town) {
+	if (town.gameOver) {
+		$("button#killSheep").attr("disabled", "true");
+		$("input#next_week").attr("disabled", "true");
+	}
 }
 
 //Send form values to Node server.

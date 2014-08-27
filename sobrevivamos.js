@@ -28,6 +28,7 @@ exports.Town = function(town) {
 		"allowForeigners": town.allowForeigners | false,
 		
 		//Historic attributes
+		"gameOver": town.gameOver | 0,
 		"deaths": town.deaths | 0,
 		"births": town.births | 0,
 		"immigrants": town.immigrants | 0,
@@ -320,6 +321,26 @@ exports.Town = function(town) {
 		return this.contents["week"];
 	}
 	
+	this.gameIsOver = function() {
+		//One or less inhabitants with no safety.
+		if ((this.contents["inhabitants"] <= 1) && (this.contents["safety"] < 50)) {
+			this.addReport("People has disappeared. No one will born, and no one will come. This is no longer a town");
+			this.contents["gameOver"] = 1;
+		}
+		
+		//100% garbage
+		if (this.contents["garbage"] >= 100) {
+			this.addReport("The contamination in this town has reached lethal levels. No living being can remain here");
+			this.contents["gameOver"] = 1;
+		}
+		
+		//52 weeks passed. Happy ending.
+		if ((this.contents["week"] >= 52) && (this.contents["gameOver"] == 0)) {
+			this.addReport("One year has already passed since you arrived here. You did a good job bringing hope to them, so they can continue growing by themselves. Now you should walk away, looking for more survivors who need your help");
+			this.contents["gameOver"] = 1;
+		}
+	}
+	
 	//Checks counter of weeks before a disaster. If 1, warning for next week. If 0, calls upon disaster and resets counter.
 	this.disasterComing = function() {
 		this.contents["weeksWithoutDisaster"]--;
@@ -411,7 +432,7 @@ exports.Town = function(town) {
 	//Now to think again how to flow.
 	
 	this.endTurn = function(callback) {
-		if (this.howManyIdles() >= 0) {
+		if ((this.howManyIdles() >= 0) && (this.contents["gameOver"] == 0)) {
 			with(this) {
 				statistics.push(milkFromSheeps());
 				statistics.push(gatherersWork());
@@ -434,6 +455,7 @@ exports.Town = function(town) {
 				statistics.push(disasterComing());
 				//statistics.push(aNewWeek());
 				contents["week"]++;
+				gameIsOver();
 			}
 		}
 		

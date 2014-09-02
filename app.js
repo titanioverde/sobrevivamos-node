@@ -30,8 +30,8 @@ app.get("/redget", function(req, res) {
 	});
 });
 
-app.get("/controls", function(req, res) {
-	res.render("town-controls", {town_id: 1});
+app.get("/controls_:town_id", function(req, res) {
+	res.render("town-controls", {town_id: req.params.town_id});
 });
 
 app.get("/get_json/:town_id", function(req, res) {
@@ -82,6 +82,22 @@ app.get("/killSheep/:town_id", function(req, res) {
 			var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function (err, replies) {
 				res.send(output);
 			});
+		});
+	});
+});
+
+//ToDo: difficulties
+app.get("/new_town", function(req, res) {
+	var next_id;
+	client.get("next_id", function(err, replies) {
+		next_id = replies;
+		console.log(next_id);
+		var change = client.set("towns:" + next_id, '{"difficulty": 1, "week": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12, "gameOver": 0}', function(err, replies) {
+			if (err) throw (err);
+			else {
+				var new_id = client.set("next_id", parseInt(next_id) + 1);
+				res.send("Town " + next_id + " generated. http://localhost:8080/controls/" + next_id);
+			}
 		});
 	});
 });

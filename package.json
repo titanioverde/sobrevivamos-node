@@ -1,0 +1,18 @@
+{
+	"name": "sobrevivamos-node",
+	"version": "0.1",
+	"description": "Arcade turn-based survival strategy. Pues Sobrevivamos / Then Let's Survive",
+	"author": {
+		"name": "Titanio Verde",
+		"email": "titanioverde@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/titanioverde/sobrevivamos-node.git"
+	},
+	"dependencies": {
+		"express": "3.2.6",
+		"jade": "1.3.1",
+		"redis": "0.10.3"
+	}
+}

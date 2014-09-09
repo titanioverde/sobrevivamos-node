@@ -1,3 +1,4 @@
+//Pues Sobrevivamos / Then Let's Survive
 //Game core class and procedures.
 
 exports.Town = function(town) {
@@ -398,7 +399,7 @@ exports.Town = function(town) {
 		return [result, inhabitants, structure, safety];
 	}
 	
-	//From here: functions with callback. (May I consider them "API"?)
+	//From here: functions with callback. (May I consider them my first "API"? (>Implying P4 Fridge Jokes had no API at all))
 	
 	//Manually butchering a sheep for a profit.
 	this.killSheep = function(callback) {
@@ -428,8 +429,6 @@ exports.Town = function(town) {
 		callback(output);
 	}
 	
-		
-	//Now to think again how to flow.
 	
 	this.endTurn = function(callback) {
 		if ((this.howManyIdles() >= 0) && (this.contents["gameOver"] == 0)) {

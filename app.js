@@ -99,6 +99,7 @@ app.get("/new_town", function(req, res) {
 	client.get("next_id", function(err, replies) {
 		next_id = replies;
 		console.log(next_id);
+		//ToDo: start next_id if (nil)
 		var change = client.set("towns:" + next_id, '{"difficulty": 1, "week": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12, "gameOver": 0}', function(err, replies) {
 			if (err) throw (err);
 			else {

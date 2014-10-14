@@ -7,19 +7,50 @@ var cwd = "/home/titanioverde/sobrevivamos-node/";
 var http = require("http");
 var express = require("express");
 var redis = require("redis");
+//var passport = require("passport");
+//var passportlocal = require("passport-local");
 
 //The game core
 var sobrevivamos = require(cwd + "sobrevivamos");
 
 //Everything for Express framework
 var app = express();
-app.use(app.router);
 app.use(express.static(cwd + "static"));
 app.use(express.bodyParser());
+app.use(express.cookieParser());
+//app.use(passport.initialize());
 app.set("view engine", "jade");
 app.set("views", cwd + "views");
+app.use(app.router);
 
 var client = redis.createClient();
+
+//Provisional sessions
+var cookieRead = function(req, res) {
+	var sessionID = 0;
+	if (!(req.cookies["sobrevivamos.session"])) {
+		sessionID = "s" + Math.round(Math.random() * 1000000);
+		res.cookie("sobrevivamos.session", sessionID);
+	} else {
+		sessionID = req.cookies["sobrevivamos.session"];
+	}
+	return sessionID;
+}
+
+//Login
+//passport.use(new LocalStrategy(
+//	function(username, password, done) {
+//		client.hexists("users:" + username, "password", function (err, user) {
+//			if (err) { return done(err); }
+//			if (!user) { return done(null, false); }
+//			client.hget("users:" + username, "password", function (err, pass) {
+//				if (pass != password) { return done(null, false); }
+//				else return done(null, user);
+//			});
+//		});
+//	}
+//));
+//ToDo: session functions and login post. Follow NPM page and examples.
 
 //Converts a report array to a formatted string.
 var reportFromList = function(array, number) {
@@ -33,7 +64,15 @@ var reportFromList = function(array, number) {
 
 //Game controls. The most usual page.
 app.get("/controls_:town_id", function(req, res) {
-	res.render("town-controls", {town_id: req.params.town_id});
+	var sessionID = cookieRead(req, res);
+	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
+		var contents = JSON.parse(replies);
+		if ((contents.owner) && (contents.owner != req.cookies["sobrevivamos.session"])) {
+			res.send("You're not allowed to enter this town.")
+		} else {
+			res.render("town-controls", {town_id: req.params.town_id});
+		}
+	});
 });
 
 //Get the town stringed JSON object from Redis, recover its JSON shape and send it to the client.
@@ -41,7 +80,6 @@ app.get("/get_json/:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
 		var contents = JSON.parse(replies);
 		var result2 = client.lrange("town" + req.params.town_id, 0, 2, function (err, replies) {
-			console.log(replies);
 			var reports = replies;
 			client.ltrim("town" + req.params.town_id, 0, 2);
 			var town = {"contents": contents, "reports": reports};
@@ -95,12 +133,13 @@ app.get("/killSheep/:town_id", function(req, res) {
 //Generate a new Redis towns: string with initial values.
 //ToDo: difficulties
 app.get("/new_town", function(req, res) {
+	var sessionID = cookieRead(req, res);
 	var next_id;
 	client.get("next_id", function(err, replies) {
 		next_id = replies;
 		console.log(next_id);
 		//ToDo: start next_id if (nil)
-		var change = client.set("towns:" + next_id, '{"difficulty": 1, "week": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12, "gameOver": 0}', function(err, replies) {
+		var change = client.set("towns:" + next_id, '{"owner": "' + sessionID + '", "difficulty": 1, "week": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12, "gameOver": 0 }', function(err, replies) {
 			if (err) throw (err);
 			else {
 				var new_id = client.set("next_id", parseInt(next_id) + 1);

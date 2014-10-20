@@ -4,6 +4,7 @@
 exports.Town = function(town) {
 	this.contents = {
 		//Important current attributes
+		"owner": town.owner,
 		"difficulty": town.difficulty | 1,
 		"week": town.week | 0,
 		"score": town.score | 0,

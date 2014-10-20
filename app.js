@@ -40,6 +40,18 @@ var cookieRead = function(req, res) {
 	return sessionID;
 }
 
+var sessionRead = function (req, res) {
+	var ownerID = 0;
+	if (!(req.session.ownerID)) {
+		ownerID = "s" + Math.round(Math.random() * 1000000);
+		req.session.ownerID = ownerID;
+	} else {
+		ownerID = req.session.ownerID;
+	}
+	return ownerID;
+	
+}
+
 //Login
 //passport.use(new LocalStrategy(
 //	function(username, password, done) {
@@ -76,10 +88,10 @@ var testSession = function(req, res) {
 
 //Game controls. The most usual page.
 app.get("/controls_:town_id", function(req, res) {
-	var sessionID = cookieRead(req, res);
+	var sessionID = sessionRead(req, res);
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
 		var contents = JSON.parse(replies);
-		if ((contents.owner) && (contents.owner != req.cookies["sobrevivamos.session"])) {
+		if ((contents.owner) && (contents.owner != sessionID)) {
 			res.send("You're not allowed to enter this town.")
 		} else {
 			res.render("town-controls", {town_id: req.params.town_id});
@@ -146,11 +158,10 @@ app.get("/killSheep/:town_id", function(req, res) {
 //Generate a new Redis "towns:" string with initial values.
 //ToDo: difficulties
 app.get("/new_town", function(req, res) {
-	var sessionID = cookieRead(req, res);
+	var sessionID = sessionRead(req, res);
 	var next_id;
 	client.get("next_id", function(err, replies) {
 		next_id = replies;
-		console.log(next_id);
 		//ToDo: start next_id if (nil)
 		var change = client.set("towns:" + next_id, '{"owner": "' + sessionID + '", "difficulty": 1, "week": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12, "gameOver": 0 }', function(err, replies) {
 			if (err) throw (err);

@@ -6,9 +6,12 @@ var cwd = "/home/titanioverde/sobrevivamos-node/";
 //Node.js modules
 var http = require("http");
 var express = require("express");
+var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
+var session = require("express-session");
 var redis = require("redis");
-//var passport = require("passport");
-//var passportlocal = require("passport-local");
+var RedisStore = require("connect-redis")(session);
+var client = redis.createClient();
 
 //The game core
 var sobrevivamos = require(cwd + "sobrevivamos");
@@ -16,14 +19,14 @@ var sobrevivamos = require(cwd + "sobrevivamos");
 //Everything for Express framework
 var app = express();
 app.use(express.static(cwd + "static"));
-app.use(express.bodyParser());
-app.use(express.cookieParser());
+app.use(bodyParser());
+app.use(cookieParser());
+app.use(session({ secret: "Zas!!", store: new RedisStore() }));
 //app.use(passport.initialize());
 app.set("view engine", "jade");
 app.set("views", cwd + "views");
 app.use(app.router);
 
-var client = redis.createClient();
 
 //Provisional sessions
 var cookieRead = function(req, res) {
@@ -62,6 +65,15 @@ var reportFromList = function(array, number) {
 	return result;
 }
 
+var testSession = function(req, res) {
+	if (req.session.count) {
+		req.session.count += 1;
+	} else {
+		req.session.count = 1;
+	}
+	console.log(req.session.count);
+}
+
 //Game controls. The most usual page.
 app.get("/controls_:town_id", function(req, res) {
 	var sessionID = cookieRead(req, res);
@@ -73,6 +85,7 @@ app.get("/controls_:town_id", function(req, res) {
 			res.render("town-controls", {town_id: req.params.town_id});
 		}
 	});
+	testSession(req, res);
 });
 
 //Get the town stringed JSON object from Redis, recover its JSON shape and send it to the client.
@@ -90,7 +103,7 @@ app.get("/get_json/:town_id", function(req, res) {
 
 //Receive set options and workers values from the client and process them through sobrevivamos.js.
 //If there's no problem nor error, one game week will pass and the client will receive new town JSON info.
-app.post("/send", express.bodyParser(), function(req, res) {
+app.post("/send", bodyParser(), function(req, res) {
 	var workers = req.body;
 	var result = client.get("towns:" + workers["town_id"], function (err, replies) {
 		var town = JSON.parse(replies);
@@ -130,7 +143,7 @@ app.get("/killSheep/:town_id", function(req, res) {
 	});
 });
 
-//Generate a new Redis towns: string with initial values.
+//Generate a new Redis "towns:" string with initial values.
 //ToDo: difficulties
 app.get("/new_town", function(req, res) {
 	var sessionID = cookieRead(req, res);
@@ -147,6 +160,11 @@ app.get("/new_town", function(req, res) {
 			}
 		});
 	});
+});
+
+
+app.get("/login", function(req, res) {
+	res.render("login");
 });
 
 //I wonder if I'll need a better server for productivity.

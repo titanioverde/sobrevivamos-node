@@ -92,12 +92,19 @@ app.get("/controls_:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
 		var contents = JSON.parse(replies);
 		if ((contents.owner) && (contents.owner != sessionID)) {
-			res.send("You're not allowed to enter this town.")
+			res.redirect("/view_" + req.params.town_id);
 		} else {
 			res.render("town-controls", {town_id: req.params.town_id});
 		}
 	});
 	testSession(req, res);
+});
+
+app.get("/view_:town_id", function(req, res) {
+	var result = client.get("towns:" + req.params.town_id, function(err, replies) {
+		var contents = JSON.parse(replies);
+		res.render("town-readonly", {contents: contents});
+	});
 });
 
 //Get the town stringed JSON object from Redis, recover its JSON shape and send it to the client.

@@ -1,0 +1,37 @@
+doctype html
+html
+
+	head
+		title Then Let's Survive
+		link(rel="stylesheet", href="default.css")
+		
+	body
+		h1 Then Let's Survive
+		h6.instructions
+			a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing") Instructions booklet
+		h5
+			| Week&nbsp;#{contents.week}
+		h6
+			| Inhabitants&nbsp;#{contents.inhabitants}
+		h6
+			| Sheeps&nbsp;#{contents.sheeps}
+		h4
+			| Supplies:
+		h6
+			| Food:&nbsp;#{contents.food}
+		h6
+			| Structure:&nbsp;#{contents.structure}
+		h6
+			| Base safety:&nbsp;#{contents.baseSafety}. Extra safety:&nbsp;#{contents.extraSafety}
+		h6
+			| Garbage:&nbsp;#{contents.garbage}%
+		h4
+			| Workers:
+		h6
+			| Gatherers:&nbsp;#{contents.gatherers}
+		h6
+			| Builders:&nbsp;#{contents.builders}
+		h6
+			| Defenders:&nbsp;#{contents.defenders}
+		h6
+			| Cleaners:&nbsp;#{contents.cleaners}

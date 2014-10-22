@@ -185,5 +185,20 @@ app.get("/login", function(req, res) {
 	res.render("login");
 });
 
+app.post("/login", bodyParser(), function(req, res) {
+	var username = req.body.username;
+	var password = req.body.password;
+	client.hexists("users:" + username, "password", function (err, user) {
+		if (err) { res.send("Login error"); }
+		if (!user) { res.send("User unknown"); }
+		client.hget("users:" + username, "password", function (err, pass) {
+			if (pass != password) { res.send("Wrong password"); }
+			else {
+				res.send("Authenticated");
+			};
+		});
+	});
+});
+
 //I wonder if I'll need a better server for productivity.
 http.createServer(app).listen(8080);

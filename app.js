@@ -28,29 +28,16 @@ app.set("views", cwd + "views");
 app.use(app.router);
 
 
-//Provisional sessions
-var cookieRead = function(req, res) {
-	var sessionID = 0;
-	if (!(req.cookies["sobrevivamos.session"])) {
-		sessionID = "s" + Math.round(Math.random() * 1000000);
-		res.cookie("sobrevivamos.session", sessionID);
-	} else {
-		sessionID = req.cookies["sobrevivamos.session"];
-	}
-	return sessionID;
-}
-
-var sessionRead = function (req, res) {
-	var ownerID = 0;
-	if (!(req.session.ownerID)) {
-		ownerID = "s" + Math.round(Math.random() * 1000000);
-		req.session.ownerID = ownerID;
-	} else {
-		ownerID = req.session.ownerID;
-	}
-	return ownerID;
-	
-}
+//var cookieRead = function(req, res) {
+//	var sessionID = 0;
+//	if (!(req.cookies["sobrevivamos.session"])) {
+//		sessionID = "s" + Math.round(Math.random() * 1000000);
+//		res.cookie("sobrevivamos.session", sessionID);
+//	} else {
+//		sessionID = req.cookies["sobrevivamos.session"];
+//	}
+//	return sessionID;
+//}
 
 //Login
 //passport.use(new LocalStrategy(
@@ -75,7 +62,7 @@ var reportFromList = function(array, number) {
 	}
 	result += "<br />";
 	return result;
-}
+};
 
 var testSession = function(req, res) {
 	if (req.session.count) {
@@ -84,7 +71,7 @@ var testSession = function(req, res) {
 		req.session.count = 1;
 	}
 	console.log(req.session.count);
-}
+};
 
 //Game controls. The most usual page.
 app.get("/controls_:town_id", function(req, res) {
@@ -180,9 +167,26 @@ app.get("/new_town", function(req, res) {
 	});
 });
 
+//Provisional sessions
+var sessionRead = function (req, res, callback) {
+	var ownerID = 0;	
+	if (!(req.session.ownerID)) {
+		ownerID = "s" + Math.round(Math.random() * 1000000);
+		req.session.ownerID = ownerID;
+	} else {
+		ownerID = req.session.ownerID;
+	}
+	if (callback) {
+		callback();
+	}
+	return ownerID;	
+};
+
 
 app.get("/login", function(req, res) {
-	res.render("login");
+	sessionRead(req, res, function() {
+		res.render("login", {username: req.session.ownerID});
+	});	
 });
 
 app.post("/login", bodyParser(), function(req, res) {
@@ -194,9 +198,16 @@ app.post("/login", bodyParser(), function(req, res) {
 		client.hget("users:" + username, "password", function (err, pass) {
 			if (pass != password) { res.send("Wrong password"); }
 			else {
+				req.session.ownerID = username;
 				res.send("Authenticated");
 			};
 		});
+	});
+});
+
+app.get("/logout", function(req, res) {
+	req.session.destroy(function() {
+		res.send("Session closed.");
 	});
 });
 

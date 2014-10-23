@@ -1,3 +1,5 @@
+> Current production version: http://vps1.titanioverde.net:8080/new_town
+
 > Original executable (English):
 > https://mfi.re/download/dvzb8qglw6hkgnp/ThenLetsSurvive03.7z
 

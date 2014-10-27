@@ -1,0 +1,21 @@
+doctype html
+html
+	head
+		title Let's Survive - Sign Up
+		
+	body
+		h1 Sign up
+		h4 #{message}
+		#register-form
+			form(method="post", action="signup")
+				div
+					label Username
+					input(type="test", name="username", id="form-username")
+				div
+					label Password
+					input(type="password", name="password", id="form-password")
+				div
+					label Password again
+					input(type="password", id="form-password2")
+				div
+					input(type="submit")

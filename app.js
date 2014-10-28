@@ -167,6 +167,10 @@ app.get("/new_town", function(req, res) {
 	});
 });
 
+var hasSpace = function (text) {
+	return (text.indexOf(" ") + 1);
+}
+
 //Provisional sessions
 var sessionRead = function (req, res, callback) {
 	var ownerID = 0;	
@@ -191,21 +195,25 @@ app.get("/signup", function(req, res) {
 app.post("/signup", bodyParser(), function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
-	client.hexists("users:" + username, "password", function (err, user) {
-		console.log(user);
-		if (err) { res.render("signup", {message: "Database error."}); }
-		if (user) { res.render("signup", {message: "User name already exists."}); }
-		else {
-			client.hset("users:" + username, "password", password, function(err, replies) {
-				console.log(replies);
-				if (err) {
-					res.send(err);
-				} else {
-					res.send("Signed up!");
-				}
-			});
-		}
-	});
+	if (hasSpace(username)) {
+		res.render("signup", {message: "No spaces in your user name, please."});
+	} else {
+		client.hexists("users:" + username, "password", function (err, user) {
+			console.log(user);
+			if (err) { res.render("signup", {message: "Database error."}); }
+			if (user) { res.render("signup", {message: "User name already exists."}); }
+			else {
+				client.hset("users:" + username, "password", password, function(err, replies) {
+					console.log(replies);
+					if (err) {
+						res.send(err);
+					} else {
+						res.send("Signed up!");
+					}
+				});
+			}
+		});
+	}
 });
 
 

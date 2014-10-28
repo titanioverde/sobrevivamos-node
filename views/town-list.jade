@@ -1,0 +1,11 @@
+doctype html
+html
+	head
+		title Then Let's Survive - Your towns
+	
+	body
+		h3 #{ownerID}'s towns.
+		ul
+			for town in towns
+				li
+					a(href="controls_#{town}") #{town}

@@ -21,38 +21,12 @@ var app = express();
 app.use(express.static(cwd + "static"));
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(session({ secret: "Zas!!", store: new RedisStore() }));
+app.use(session({ key: "sobrevivamos-session", cookie: {maxAge: 604801000}, secret: "Zas!!", store: new RedisStore() }));
 //app.use(passport.initialize());
 app.set("view engine", "jade");
 app.set("views", cwd + "views");
 app.use(app.router);
 
-
-//var cookieRead = function(req, res) {
-//	var sessionID = 0;
-//	if (!(req.cookies["sobrevivamos.session"])) {
-//		sessionID = "s" + Math.round(Math.random() * 1000000);
-//		res.cookie("sobrevivamos.session", sessionID);
-//	} else {
-//		sessionID = req.cookies["sobrevivamos.session"];
-//	}
-//	return sessionID;
-//}
-
-//Login
-//passport.use(new LocalStrategy(
-//	function(username, password, done) {
-//		client.hexists("users:" + username, "password", function (err, user) {
-//			if (err) { return done(err); }
-//			if (!user) { return done(null, false); }
-//			client.hget("users:" + username, "password", function (err, pass) {
-//				if (pass != password) { return done(null, false); }
-//				else return done(null, user);
-//			});
-//		});
-//	}
-//));
-//ToDo: session functions and login post. Follow NPM page and examples.
 
 //Converts a report array to a formatted string.
 var reportFromList = function(array, number) {
@@ -63,6 +37,7 @@ var reportFromList = function(array, number) {
 	result += "<br />";
 	return result;
 };
+
 
 var testSession = function(req, res) {
 	if (req.session.count) {
@@ -92,6 +67,21 @@ app.get("/view_:town_id", function(req, res) {
 		var contents = JSON.parse(replies);
 		res.render("town-readonly", {contents: contents});
 	});
+});
+
+app.get("/town_list", function(req, res) {
+	var ownerID = sessionRead(req, res);
+	var list = client.smembers("ownedBy:" + ownerID, function(err, replies) {
+		if (err) {
+			res.send(err);
+		} else {
+			if (replies.length > 0) {
+				res.render("town-list", {towns: replies, ownerID: ownerID});
+			} else {
+				res.redirect("/new_town");
+			}
+		}
+	});	
 });
 
 //Get the town stringed JSON object from Redis, recover its JSON shape and send it to the client.
@@ -161,7 +151,8 @@ app.get("/new_town", function(req, res) {
 			if (err) throw (err);
 			else {
 				var new_id = client.set("next_id", parseInt(next_id) + 1);
-				res.send("Town " + next_id + " generated. http://localhost:8080/controls/" + next_id); //Provisional
+				console.log(client.sadd("ownedBy:" + sessionID, next_id));
+				res.send("Town " + next_id + " generated. <a href='controls_" + next_id + "'>Come in."); //Provisional
 			}
 		});
 	});
@@ -208,7 +199,7 @@ app.post("/signup", bodyParser(), function(req, res) {
 					if (err) {
 						res.send(err);
 					} else {
-						res.send("Signed up!");
+						res.redirect("/town_list");
 					}
 				});
 			}
@@ -233,7 +224,7 @@ app.post("/login", bodyParser(), function(req, res) {
 			if (pass != password) { res.send("Wrong password"); }
 			else {
 				req.session.ownerID = username;
-				res.send("Authenticated");
+				res.redirect("/town_list");
 			};
 		});
 	});

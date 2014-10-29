@@ -103,28 +103,36 @@ app.post("/send", bodyParser(), function(req, res) {
 	var workers = req.body;
 	var result = client.get("towns:" + workers["town_id"], function (err, replies) {
 		var town = JSON.parse(replies);
-		for (var worker in workers) {
-			if (worker !== "name") { //I can't remember right now the reason behind this check...
-				town[worker] = parseInt(workers[worker]);
-			} else {
-				town[worker] = workers[worker];
-			}			
-		}
-		
-		var new_town = new sobrevivamos.Town(town);
-		new_town.endTurn(function() {
-			var change = client.set("towns:" + workers["town_id"], JSON.stringify(new_town.contents), function (err, replies) {
-				if (replies == "OK") {
-					var textReports = reportFromList(new_town.reports, new_town.contents.week);
-					var change2 = client.lpush("town" + workers["town_id"], textReports, function (err, replies) {
-						res.send(200); //HTTP status must be enough for client to ask again for /get_json
-					});
-					
+		if (town["owner"] != req.session.ownerID) {
+			res.send(401);
+			console.log("Wrong user.")
+		} else {
+			for (var worker in workers) {
+				if (worker !== "name") { //I can't remember right now the reason behind this check...
+					town[worker] = parseInt(workers[worker]);
+				} else {
+					town[worker] = workers[worker];
 				}
+			}
+			var new_town = new sobrevivamos.Town(town);
+			new_town.endTurn(function() {
+				var change = client.set("towns:" + workers["town_id"], JSON.stringify(new_town.contents), function (err, replies) {
+					if (replies == "OK") {
+						var textReports = reportFromList(new_town.reports, new_town.contents.week);
+						var change2 = client.lpush("town" + workers["town_id"], textReports, function (err, replies) {
+							res.send(200); //HTTP status must be enough for client to ask again for /get_json
+						});
+						
+					}
+				});
 			});
-		});
+		}
 	});
 });
+
+var isYourTown = function(req, res) {
+	//Coming soon. Apply to killSheep too.
+}
 
 //Immediate effect for current town.
 app.get("/killSheep/:town_id", function(req, res) {
@@ -199,7 +207,7 @@ app.post("/signup", bodyParser(), function(req, res) {
 					if (err) {
 						res.send(err);
 					} else {
-						res.redirect("/town_list");
+						res.send("Signed up! Now you can <a href='login'>log in</a>.");
 					}
 				});
 			}

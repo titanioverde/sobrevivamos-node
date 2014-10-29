@@ -38,15 +38,25 @@ var reportFromList = function(array, number) {
 	return result;
 };
 
-
-var testSession = function(req, res) {
-	if (req.session.count) {
-		req.session.count += 1;
+//A bit of security to forbid other users to modify current town.
+var isYourTown = function(req, res, town) {
+	if (town["owner"] != req.session.ownerID) {
+		res.send(401);
+		return 0;
 	} else {
-		req.session.count = 1;
+		return 1;
 	}
-	console.log(req.session.count);
-};
+}
+
+
+//var testSession = function(req, res) {
+//	if (req.session.count) {
+//		req.session.count += 1;
+//	} else {
+//		req.session.count = 1;
+//	}
+//	console.log(req.session.count);
+//};
 
 //Game controls. The most usual page.
 app.get("/controls_:town_id", function(req, res) {
@@ -59,9 +69,9 @@ app.get("/controls_:town_id", function(req, res) {
 			res.render("town-controls", {town_id: req.params.town_id});
 		}
 	});
-	testSession(req, res);
 });
 
+//Read-only information about a town.
 app.get("/view_:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function(err, replies) {
 		var contents = JSON.parse(replies);
@@ -69,6 +79,7 @@ app.get("/view_:town_id", function(req, res) {
 	});
 });
 
+//Just a number of towns owned by current user. Later it will show more info.
 app.get("/town_list", function(req, res) {
 	var ownerID = sessionRead(req, res);
 	var list = client.smembers("ownedBy:" + ownerID, function(err, replies) {
@@ -103,10 +114,7 @@ app.post("/send", bodyParser(), function(req, res) {
 	var workers = req.body;
 	var result = client.get("towns:" + workers["town_id"], function (err, replies) {
 		var town = JSON.parse(replies);
-		if (town["owner"] != req.session.ownerID) {
-			res.send(401);
-			console.log("Wrong user.")
-		} else {
+		if (isYourTown(req, res, town)) {
 			for (var worker in workers) {
 				if (worker !== "name") { //I can't remember right now the reason behind this check...
 					town[worker] = parseInt(workers[worker]);
@@ -122,7 +130,6 @@ app.post("/send", bodyParser(), function(req, res) {
 						var change2 = client.lpush("town" + workers["town_id"], textReports, function (err, replies) {
 							res.send(200); //HTTP status must be enough for client to ask again for /get_json
 						});
-						
 					}
 				});
 			});
@@ -130,20 +137,18 @@ app.post("/send", bodyParser(), function(req, res) {
 	});
 });
 
-var isYourTown = function(req, res) {
-	//Coming soon. Apply to killSheep too.
-}
-
 //Immediate effect for current town.
 app.get("/killSheep/:town_id", function(req, res) {
 	client.get("towns:" + req.params.town_id, function (err, replies) {
 		var town = JSON.parse(replies);
-		var new_town = new sobrevivamos.Town(town);
-		new_town.killSheep(function(output) {
-			var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function (err, replies) {
-				res.send(output);
+		if (isYourTown(req, res, town)) {
+			var new_town = new sobrevivamos.Town(town);
+			new_town.killSheep(function(output) {
+				var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function (err, replies) {
+					res.send(output);
+				});
 			});
-		});
+		}
 	});
 });
 

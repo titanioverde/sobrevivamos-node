@@ -19,3 +19,9 @@ span {
 .warning_fail {
 	animation-name: fail;
 }
+
+.tryAgain {
+	background-color: brown;
+	color: white;
+	display: none;
+}

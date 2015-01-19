@@ -32,7 +32,7 @@ var difficulties = {
 	0: { "townType": "Novice", "difficulty": 0, "inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 25, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
 	1: { "townType": "Easy", "difficulty": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12 },
 	5: { "townType": "Extreme", "difficulty": 5, "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 9, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
-}
+} //ToDo: Something is wrong with the food consumed.
 
 
 //Converts a report array to a formatted string.
@@ -155,11 +155,11 @@ app.get("/killSheep/:town_id", function(req, res) {
 app.get("/new_town/:difficulty", function(req, res) {
 	var sessionID = sessionRead(req, res);
 	var next_id;
-	var difficulty = JSON.stringify(difficulties[req.params.difficulty]);
-	if (difficulty == "undefined") {
+	var input = req.params.difficulty;
+	if (!(difficulties.hasOwnProperty(input))) {
 		res.send("Town type unknown.");
 	} else {
-		difficulty = difficulty.replace(/[{}]/g, "");
+		difficulty = difficulties[input].replace(/[{}]/g, "");
 		client.get("next_id", function(err, replies) {
 			next_id = replies;
 			//ToDo: start next_id if (nil)
@@ -168,7 +168,7 @@ app.get("/new_town/:difficulty", function(req, res) {
 				else {
 					var new_id = client.set("next_id", parseInt(next_id) + 1);
 					console.log(client.sadd("ownedBy:" + sessionID, next_id));
-					res.send("Town " + next_id + " generated. <a href='controls_" + next_id + "'>Come in</a>."); //Provisional
+					res.send("Town " + next_id + " generated. <a href='/controls_" + next_id + "'>Come in</a>."); //Provisional
 				}
 			});
 		});

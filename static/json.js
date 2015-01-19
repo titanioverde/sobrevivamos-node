@@ -53,6 +53,7 @@ function gameIsOver(town) {
 	if (town.gameOver) {
 		$("button#killSheep").attr("disabled", "true");
 		$("input#next_week").attr("disabled", "true");
+		$("div.tryAgain").show();
 	}
 }
 

@@ -120,6 +120,7 @@ exports.Town = function(town) {
 	
 	//Static food consumed in a turn.
 	this.foodEaten = function() {
+		console.log(this.contents);
 		var food = ((this.contents["builders"] +
 					 this.contents["defenders"] +
 					 this.contents["cleaners"]) * 3) +
@@ -144,44 +145,6 @@ exports.Town = function(town) {
 		garbage = garbage + (Math.round(this.contents["inhabitants"] / 15) * 4);
 		this.contents["garbage"] += garbage;
 		return garbage;
-	}
-	
-	//Random number of inhabitants born in a week, based on idles amount.
-	this.inhabitantBirths = function() {
-		if (this.contents["idles"] <= 1) {
-			return 0;
-		} else {			
-			var births = 0;
-			for (var encounter = 0; encounter < ((this.contents["idles"] / 4) + 1); encounter++) {
-				if (Math.random() > 0.5) {
-					births++;
-				}
-			}
-			
-			this.contents["inhabitants"] += births;
-			this.addReport("Newborn inhabitants", births);
-			return births;
-		}
-		
-		
-	}
-	
-	//Random number of sheeps born. No more than 5 sheeps per week.
-	this.sheepBirths = function() {
-		if (this.contents["sheeps"] <= 1) {
-			return 0
-		}
-		
-		var births = 0;
-		for (var encounter = 0; encounter < (this.contents["sheeps"] / 2); encounter++) {
-			if ((Math.random() > 0.7) && (births <= 5)) {
-				births++;
-			}
-		}
-		
-		this.contents["sheeps"] += births;
-		this.addReport("Newborn sheeps", births);
-		return births;
 	}
 	
 	//Deaths due to insufficient Structure. One of each for now.
@@ -215,7 +178,7 @@ exports.Town = function(town) {
 	
 	//Death due to insufficient Food.
 	this.deathByHunger = function() {
-		if (this.foodEaten() > this.contents["food"]) {
+		if (this.contents["food"] <= 0) {
 			var inhabitants = 0;
 			for (var death = 0; death < (this.contents["inhabitants"] / 3); death++) {
 				if (Math.random() > 0.2) {
@@ -279,6 +242,46 @@ exports.Town = function(town) {
 			return 0;
 		}
 	}
+	//Random number of inhabitants born in a week, based on idles amount.
+	this.inhabitantBirths = function() {
+		if (this.contents["idles"] <= 1) {
+			return 0;
+		} else {			
+			var births = 0;
+			for (var encounter = 0; encounter < ((this.contents["idles"] / 4) + 1); encounter++) {
+				if (Math.random() > 0.5) {
+					births++;
+				}
+			}
+			
+			this.contents["inhabitants"] += births;
+			this.addReport("Newborn inhabitants", births);
+			return births;
+		}
+		
+		
+	}
+	
+
+	//Random number of sheeps born. No more than 5 sheeps per week.
+	this.sheepBirths = function() {
+		if (this.contents["sheeps"] <= 1) {
+			return 0
+		}
+		
+		var births = 0;
+		for (var encounter = 0; encounter < (this.contents["sheeps"] / 2); encounter++) {
+			if ((Math.random() > 0.7) && (births <= 5)) {
+				births++;
+			}
+		}
+		
+		this.contents["sheeps"] += births;
+		this.addReport("Newborn sheeps", births);
+		return births;
+	}
+	
+
 	
 	//Incoming people because of a high level of Safety.
 	this.immigrantsBySafety = function() {
@@ -440,13 +443,13 @@ exports.Town = function(town) {
 				statistics.push(defendersEnhance());
 				statistics.push(addedSafety());
 				statistics.push(wholeSafety());
-				statistics.push(deathByHunger());
-				statistics.push(deathsByStructure());
 				statistics.push(fleesBySafety());
 				statistics.push(foodEaten());
 				statistics.push(structureNeeded());
 				statistics.push(garbageProduced());
 				statistics.push(cleanersWork());
+				statistics.push(deathByHunger());
+				statistics.push(deathsByStructure());
 				statistics.push(deathByGarbage());
 				statistics.push(lossesByGarbage());
 				statistics.push(inhabitantBirths());

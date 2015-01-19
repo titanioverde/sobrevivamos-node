@@ -28,6 +28,13 @@ app.set("views", cwd + "views");
 app.use(app.router);
 
 
+var difficulties = {
+	0: { "townType": "Novice", "difficulty": 0, "inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 25, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
+	1: { "townType": "Easy", "difficulty": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12 },
+	5: { "townType": "Extreme", "difficulty": 5, "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 9, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
+}
+
+
 //Converts a report array to a formatted string.
 var reportFromList = function(array, number) {
 	var result = "Week " + number + " - ";
@@ -48,15 +55,6 @@ var isYourTown = function(req, res, town) {
 	}
 }
 
-
-//var testSession = function(req, res) {
-//	if (req.session.count) {
-//		req.session.count += 1;
-//	} else {
-//		req.session.count = 1;
-//	}
-//	console.log(req.session.count);
-//};
 
 //Game controls. The most usual page.
 app.get("/controls_:town_id", function(req, res) {
@@ -154,21 +152,28 @@ app.get("/killSheep/:town_id", function(req, res) {
 
 //Generate a new Redis "towns:" string with initial values.
 //ToDo: difficulties
-app.get("/new_town", function(req, res) {
+app.get("/new_town/:difficulty", function(req, res) {
 	var sessionID = sessionRead(req, res);
 	var next_id;
-	client.get("next_id", function(err, replies) {
-		next_id = replies;
-		//ToDo: start next_id if (nil)
-		var change = client.set("towns:" + next_id, '{"owner": "' + sessionID + '", "difficulty": 1, "week": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12, "gameOver": 0 }', function(err, replies) {
-			if (err) throw (err);
-			else {
-				var new_id = client.set("next_id", parseInt(next_id) + 1);
-				console.log(client.sadd("ownedBy:" + sessionID, next_id));
-				res.send("Town " + next_id + " generated. <a href='controls_" + next_id + "'>Come in."); //Provisional
-			}
+	var difficulty = JSON.stringify(difficulties[req.params.difficulty]);
+	if (difficulty == "undefined") {
+		res.send("Town type unknown.");
+	} else {
+		difficulty = difficulty.replace(/[{}]/g, "");
+		client.get("next_id", function(err, replies) {
+			next_id = replies;
+			//ToDo: start next_id if (nil)
+			var change = client.set("towns:" + next_id, '{"owner": "' + sessionID +'", ' + difficulty + ', "week": 1, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "gameOver": 0 }', function(err, replies) {
+				if (err) throw (err);
+				else {
+					var new_id = client.set("next_id", parseInt(next_id) + 1);
+					console.log(client.sadd("ownedBy:" + sessionID, next_id));
+					res.send("Town " + next_id + " generated. <a href='controls_" + next_id + "'>Come in</a>."); //Provisional
+				}
+			});
 		});
-	});
+
+	}
 });
 
 var hasSpace = function (text) {

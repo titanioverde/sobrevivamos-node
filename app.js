@@ -150,6 +150,11 @@ app.get("/killSheep/:town_id", function(req, res) {
 	});
 });
 
+app.get("/new_town", function(req, res) {
+	var dif_list = Object.keys(difficulties);
+	res.render("new-town", {dif_list: dif_list, difficulties: difficulties});
+});
+
 //Generate a new Redis "towns:" string with initial values.
 //ToDo: difficulties
 app.get("/new_town/:difficulty", function(req, res) {
@@ -159,7 +164,12 @@ app.get("/new_town/:difficulty", function(req, res) {
 	if (!(difficulties.hasOwnProperty(input))) {
 		res.send("Town type unknown.");
 	} else {
-		difficulty = difficulties[input].replace(/[{}]/g, "");
+		console.log(difficulties);
+		difficulty = difficulties[input];
+		console.log(difficulty);
+		difficulty = JSON.stringify(difficulty);
+		console.log(difficulty);
+		difficulty = difficulty.replace(/[{}]/g, "");
 		client.get("next_id", function(err, replies) {
 			next_id = replies;
 			//ToDo: start next_id if (nil)

@@ -126,7 +126,6 @@ exports.Town = function(town) {
 					 this.contents["cleaners"]) * 3) +
 					 (this.contents["idles"] * 2);
 		this.contents["food"] -= food;
-		this.posi("food");
 		return food;
 	}
 	
@@ -178,7 +177,8 @@ exports.Town = function(town) {
 	
 	//Death due to insufficient Food.
 	this.deathByHunger = function() {
-		if (this.contents["food"] <= 0) {
+		if (this.contents["food"] < 0) {
+			this.posi("food");
 			var inhabitants = 0;
 			for (var death = 0; death < (this.contents["inhabitants"] / 3); death++) {
 				if (Math.random() > 0.2) {
@@ -231,8 +231,8 @@ exports.Town = function(town) {
 	
 	//Flees due to a low level of Safety. Only one for now.
 	this.fleesBySafety = function() {
-		if (this.contents["safety"] < 10) {
-			var inhabitants = 1;
+		if ((this.contents["safety"] < 10) && (this.contents["inhabitants"] > 6)) {
+			var inhabitants = 1; //ToDo: Random calc.
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
 			
@@ -369,7 +369,7 @@ exports.Town = function(town) {
 		}
 		
 		if (weeks <= 0) {
-			this.contents["weeksWithoutDisaster"] = parseInt(7 + (Math.random() * 5) - (this.contents["difficulty"] * 2));
+			this.contents["weeksWithoutDisaster"] = parseInt(7 + (Math.random() * 5) - (this.contents["difficulty"]));
 		}
 		
 		return result;
@@ -382,20 +382,21 @@ exports.Town = function(town) {
 			safety = 0,
 			result = undefined;
 		
-		if (this.contents["safety"] >= 50) {
-			safety = 25;
+		if (this.contents["safety"] >= 20) {
+			safety = 10;
 			this.contents["baseSafety"] -= safety;
 			this.posi(["safety"]);
 			this.addReport("A storm fell here. Your town was safe enough to prevent significant damages");
 			result = "safe";
 		} else {
 			this.contents["baseSafety"] = 0;
-			inhabitants = 2 + Math.round(Math.random() * 3);
+			inhabitants = Math.round((this.contents["inhabitants"] / 10) + (Math.random() * 3));
 			structure = 20;
 			this.addReport("A storm fell here. Structure damaged. Dead inhabitants", inhabitants);
 			result = "bad";
 		}
 		
+		if (inhabitants > this.contents["inhabitants"]) inhabitants = this.contents["inhabitants"]; //ToDo: control this globally. Else, there would be more bodies than inhabitants. ^_^u
 		this.contents["inhabitants"] -= inhabitants;
 		this.posi(["inhabitants"]);
 		this.contents["structure"] -= structure;
@@ -460,8 +461,7 @@ exports.Town = function(town) {
 				contents["week"]++;
 				gameIsOver();
 			}
-		}
-		
+		}		
 		
 		console.log(this.statistics);
 		callback();

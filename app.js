@@ -1,8 +1,5 @@
 //Pues Sobrevivamos / Then Let's Survive API
 
-//Static path. Provisional.
-var cwd = "/home/titanioverde/sobrevivamos-node/";
-
 //Node.js modules
 var http = require("http");
 var express = require("express");
@@ -14,17 +11,17 @@ var RedisStore = require("connect-redis")(session);
 var client = redis.createClient();
 
 //The game core
-var sobrevivamos = require(cwd + "sobrevivamos");
+var sobrevivamos = require("./sobrevivamos");
 
 //Everything for Express framework
 var app = express();
-app.use(express.static(cwd + "static"));
+app.use(express.static("./static"));
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({ key: "sobrevivamos-session", cookie: {maxAge: 604801000}, secret: "Zas!!", store: new RedisStore() }));
 //app.use(passport.initialize());
 app.set("view engine", "jade");
-app.set("views", cwd + "views");
+app.set("views", "./views");
 app.use(app.router);
 
 

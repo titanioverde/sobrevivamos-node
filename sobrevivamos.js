@@ -255,6 +255,7 @@ exports.Town = function(town) {
 			}
 			
 			this.contents["inhabitants"] += births;
+			this.contents["births"] += births;
 			this.addReport("Newborn inhabitants", births);
 			return births;
 		}
@@ -392,16 +393,31 @@ exports.Town = function(town) {
 			this.contents["baseSafety"] = 0;
 			inhabitants = Math.round((this.contents["inhabitants"] / 10) + (Math.random() * 3));
 			structure = 20;
+			if (inhabitants > this.contents["inhabitants"]) inhabitants = this.contents["inhabitants"]; //ToDo: control this globally. Else, there would be more bodies than inhabitants. ^_^u
 			this.addReport("A storm fell here. Structure damaged. Dead inhabitants", inhabitants);
 			result = "bad";
 		}
 		
-		if (inhabitants > this.contents["inhabitants"]) inhabitants = this.contents["inhabitants"]; //ToDo: control this globally. Else, there would be more bodies than inhabitants. ^_^u
 		this.contents["inhabitants"] -= inhabitants;
 		this.posi(["inhabitants"]);
 		this.contents["structure"] -= structure;
 		this.posi(["structure"]);
 		return [result, inhabitants, structure, safety];
+	}
+	
+	this.calculateScore = function() {
+		var score = (
+			(this.contents["food"] * 2) +
+			(this.contents["baseSafety"] * 3) +
+			(this.contents["structure"] * 4) -
+			(this.contents["garbage"] * 5) +
+			(this.contents["immigrants"] * 40) +
+			(this.contents["sheeps"] * 50) +
+			(this.contents["births"] * 60) -
+			(this.contents["deaths"] * 70)
+		);
+		this.contents["score"] = score;
+		return score;
 	}
 	
 	//From here: functions with callback. (May I consider them my first "API"? (>Implying P4 Fridge Jokes had no API at all))
@@ -430,6 +446,7 @@ exports.Town = function(town) {
 			this.contents["baseSafety"] += output.safety;
 			this.contents["garbage"] += output.garbage;
 			this.wholeSafety();
+			this.calculateScore();
 		}
 		callback(output);
 	}
@@ -457,6 +474,7 @@ exports.Town = function(town) {
 				statistics.push(sheepBirths());
 				statistics.push(immigrantsBySafety());
 				statistics.push(disasterComing());
+				statistics.push(calculateScore());
 				//statistics.push(aNewWeek());
 				contents["week"]++;
 				gameIsOver();

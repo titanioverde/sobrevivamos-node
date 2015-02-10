@@ -26,6 +26,7 @@ function refreshEverything(town, reports) {
 	refreshForm(town);
 	refreshIdles(town);
 	refreshSpan("sheeps", town);
+	refreshSpan("score", town);
 	for (var resource in main_resources) {
 		refreshSpan(main_resources[resource], town);
 	}

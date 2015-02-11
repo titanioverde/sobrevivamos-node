@@ -26,7 +26,18 @@ function refreshEverything(town, reports) {
 	refreshForm(town);
 	refreshIdles(town);
 	refreshSpan("sheeps", town);
-	refreshSpan("score", town);
+	if (town.score > 0) {
+		refreshSpan("score", town);
+	} else { //Sorry. I haven't figured yet how to calculate score while creating a town, and not later.
+		$.ajax("/calculateScore/" + ($("#town_id").attr("value")), {
+			type: "get",
+			success: function(data) {
+				town.score = data.score;
+				refreshSpan("score", town);
+			}
+		});
+	}
+	
 	for (var resource in main_resources) {
 		refreshSpan(main_resources[resource], town);
 	}
@@ -89,7 +100,7 @@ function killSheep() {
 	} else {
 		town_id = $("#town_id").attr("value");
 		$("span#sheeps").removeClass("warning_success warning_fail");
-		$.ajax("killSheep/" + town_id, {
+		$.ajax("/killSheep/" + town_id, {
 			data: "town_id=" + town_id,
 			type: "get",
 			beforeSend: function(data) {

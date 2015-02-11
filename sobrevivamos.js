@@ -405,21 +405,6 @@ exports.Town = function(town) {
 		return [result, inhabitants, structure, safety];
 	}
 	
-	this.calculateScore = function() {
-		var score = (
-			(this.contents["food"] * 2) +
-			(this.contents["baseSafety"] * 3) +
-			(this.contents["structure"] * 4) -
-			(this.contents["garbage"] * 5) +
-			(this.contents["immigrants"] * 40) +
-			(this.contents["sheeps"] * 50) +
-			(this.contents["births"] * 60) -
-			(this.contents["deaths"] * 70)
-		);
-		this.contents["score"] = score;
-		return score;
-	}
-	
 	//From here: functions with callback. (May I consider them my first "API"? (>Implying P4 Fridge Jokes had no API at all))
 	
 	//Manually butchering a sheep for a profit.
@@ -451,7 +436,25 @@ exports.Town = function(town) {
 		callback(output);
 	}
 	
+	//Sums up the global score of this town.
+	//A callback is expected when score is calculated before the first turn.
+	this.calculateScore = function(callback) {
+		var score = (
+			(this.contents["food"] * 2) +
+			(this.contents["baseSafety"] * 3) +
+			(this.contents["structure"] * 4) -
+			(this.contents["garbage"] * 5) +
+			(this.contents["immigrants"] * 40) +
+			(this.contents["sheeps"] * 50) +
+			(this.contents["births"] * 60) -
+			(this.contents["deaths"] * 70)
+		);
+		this.contents["score"] = score;
+		if (typeof(callback) == "function") callback(score);
+		return score;
+	}
 	
+
 	this.endTurn = function(callback) {
 		if ((this.howManyIdles() >= 0) && (this.contents["gameOver"] == 0)) {
 			with(this) {

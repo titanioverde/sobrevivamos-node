@@ -29,7 +29,7 @@ var difficulties = {
 	0: { "townType": "Novice", "difficulty": 0, "inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 25, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
 	1: { "townType": "Easy", "difficulty": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12 },
 	5: { "townType": "Extreme", "difficulty": 5, "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 9, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
-} //ToDo: Something is wrong with the food consumed.
+}
 
 
 //Converts a report array to a formatted string.
@@ -141,6 +141,20 @@ app.get("/killSheep/:town_id", function(req, res) {
 			new_town.killSheep(function(output) {
 				var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function (err, replies) {
 					res.send(output);
+				});
+			});
+		}
+	});
+});
+
+app.get("/calculateScore/:town_id", function(req, res) {
+	client.get("towns:" + req.params.town_id, function (err, replies) {
+		var town = JSON.parse(replies);
+		if (isYourTown(req, res, town)) {
+			var new_town = new sobrevivamos.Town(town);
+			new_town.calculateScore(function(score) {
+				var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function(err, replies) {
+					res.json({"score": score});
 				});
 			});
 		}

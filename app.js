@@ -52,16 +52,30 @@ var isYourTown = function(req, res, town) {
 	}
 }
 
+//To avoid exceptions from unexpected / non-existent towns. (Else, Node will just hang)
+var thisTownExists = function(value) {
+	if (([null, false, 0, "(nil)"]).indexOf(value) >= 0) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
 
 //Game controls. The most usual page.
 app.get("/controls_:town_id", function(req, res) {
 	var sessionID = sessionRead(req, res);
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
-		var contents = JSON.parse(replies);
-		if ((contents.owner) && (contents.owner != sessionID)) {
-			res.redirect("/view_" + req.params.town_id);
+		if (thisTownExists(replies)) {
+			var contents = JSON.parse(replies);
+			if ((contents.owner) && (contents.owner != sessionID)) {
+				res.redirect("/view_" + req.params.town_id);
+			} else {
+				res.render("town-controls", {town_id: req.params.town_id});
+			}
 		} else {
-			res.render("town-controls", {town_id: req.params.town_id});
+			res.status(404);
+			res.render("town-non-existent");
 		}
 	});
 });
@@ -69,8 +83,13 @@ app.get("/controls_:town_id", function(req, res) {
 //Read-only information about a town.
 app.get("/view_:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function(err, replies) {
-		var contents = JSON.parse(replies);
-		res.render("town-readonly", {contents: contents});
+		if (thisTownExists(replies)) {
+			var contents = JSON.parse(replies);
+			res.render("town-readonly", {contents: contents});
+		} else {
+			res.status(404);
+			res.render("town-non-existent");
+		}
 	});
 });
 
@@ -93,13 +112,17 @@ app.get("/town_list", function(req, res) {
 //Get the town stringed JSON object from Redis, recover its JSON shape and send it to the client.
 app.get("/get_json/:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
-		var contents = JSON.parse(replies);
-		var result2 = client.lrange("town" + req.params.town_id, 0, 2, function (err, replies) {
-			var reports = replies;
-			client.ltrim("town" + req.params.town_id, 0, 2);
-			var town = {"contents": contents, "reports": reports};
-			res.json(town);
-		});
+		if (thisTownExists(replies)) {
+			var contents = JSON.parse(replies);
+			var result2 = client.lrange("town" + req.params.town_id, 0, 2, function (err, replies) {
+				var reports = replies;
+				client.ltrim("town" + req.params.town_id, 0, 2);
+				var town = {"contents": contents, "reports": reports};
+				res.json(town);
+			});
+		} else {
+			res.send(404);
+		}
 	});
 });
 
@@ -108,26 +131,30 @@ app.get("/get_json/:town_id", function(req, res) {
 app.post("/send", bodyParser(), function(req, res) {
 	var workers = req.body;
 	var result = client.get("towns:" + workers["town_id"], function (err, replies) {
-		var town = JSON.parse(replies);
-		if (isYourTown(req, res, town)) {
-			for (var worker in workers) {
-				if (worker !== "name") { //I can't remember right now the reason behind this check...
-					town[worker] = parseInt(workers[worker]);
-				} else {
-					town[worker] = workers[worker];
-				}
-			}
-			var new_town = new sobrevivamos.Town(town);
-			new_town.endTurn(function() {
-				var change = client.set("towns:" + workers["town_id"], JSON.stringify(new_town.contents), function (err, replies) {
-					if (replies == "OK") {
-						var textReports = reportFromList(new_town.reports, new_town.contents.week);
-						var change2 = client.lpush("town" + workers["town_id"], textReports, function (err, replies) {
-							res.send(200); //HTTP status must be enough for client to ask again for /get_json
-						});
+		if (thisTownExists(replies)) {
+			var town = JSON.parse(replies);
+			if (isYourTown(req, res, town)) {
+				for (var worker in workers) {
+					if (worker !== "name") { //I can't remember right now the reason behind this check...
+						town[worker] = parseInt(workers[worker]);
+					} else {
+						town[worker] = workers[worker];
 					}
+				}
+				var new_town = new sobrevivamos.Town(town);
+				new_town.endTurn(function() {
+					var change = client.set("towns:" + workers["town_id"], JSON.stringify(new_town.contents), function (err, replies) {
+						if (replies == "OK") {
+							var textReports = reportFromList(new_town.reports, new_town.contents.week);
+							var change2 = client.lpush("town" + workers["town_id"], textReports, function (err, replies) {
+								res.send(200); //HTTP status must be enough for client to ask again for /get_json
+							});
+						}
+					});
 				});
-			});
+			}			
+		} else {
+			res.send(404);
 		}
 	});
 });
@@ -135,28 +162,36 @@ app.post("/send", bodyParser(), function(req, res) {
 //Immediate effect for current town.
 app.get("/killSheep/:town_id", function(req, res) {
 	client.get("towns:" + req.params.town_id, function (err, replies) {
-		var town = JSON.parse(replies);
-		if (isYourTown(req, res, town)) {
-			var new_town = new sobrevivamos.Town(town);
-			new_town.killSheep(function(output) {
-				var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function (err, replies) {
-					res.send(output);
+		if (thisTownExists(replies)) {
+			var town = JSON.parse(replies);
+			if (isYourTown(req, res, town)) {
+				var new_town = new sobrevivamos.Town(town);
+				new_town.killSheep(function(output) {
+					var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function (err, replies) {
+						res.send(output);
+					});
 				});
-			});
+			}
+		} else {
+			res.send(404);
 		}
 	});
 });
 
 app.get("/calculateScore/:town_id", function(req, res) {
 	client.get("towns:" + req.params.town_id, function (err, replies) {
-		var town = JSON.parse(replies);
-		if (isYourTown(req, res, town)) {
-			var new_town = new sobrevivamos.Town(town);
-			new_town.calculateScore(function(score) {
-				var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function(err, replies) {
-					res.json({"score": score});
+		if (thisTownExists(replies)) {
+			var town = JSON.parse(replies);
+			if (isYourTown(req, res, town)) {
+				var new_town = new sobrevivamos.Town(town);
+				new_town.calculateScore(function(score) {
+					var change = client.set("towns:" + req.params.town_id, JSON.stringify(new_town.contents), function(err, replies) {
+						res.json({"score": score});
+					});
 				});
-			});
+			}
+		} else {
+			res.send(404);
 		}
 	});
 });
@@ -173,7 +208,7 @@ app.get("/new_town/:difficulty", function(req, res) {
 	var next_id;
 	var input = req.params.difficulty;
 	if (!(difficulties.hasOwnProperty(input))) {
-		res.send("Town type unknown.");
+		res.send(404, "Town type unknown.");
 	} else {
 		console.log(difficulties);
 		difficulty = difficulties[input];

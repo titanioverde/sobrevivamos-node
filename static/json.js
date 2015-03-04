@@ -105,6 +105,7 @@ function killSheep() {
 			type: "get",
 			beforeSend: function(data) {
 				$("button#killSheep").attr("disabled", "true");
+				$("input#next_week").attr("disabled", "true");
 			},
 			success: function(data) {
 				var output = data;
@@ -115,6 +116,7 @@ function killSheep() {
 						$("span#sheeps").addClass("warning_fail");
 					}
 					$("button#killSheep").removeAttr("disabled");
+					$("input#next_week").removeAttr("disabled");
 	
 				});
 			}

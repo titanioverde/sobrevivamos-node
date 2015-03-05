@@ -2,6 +2,7 @@
 //Game core class and procedures.
 
 exports.Town = function(town) {
+	console.log("Allow" + town.allowForeigners);
 	this.contents = {
 		//Important current attributes
 		"owner": town.owner,
@@ -293,12 +294,20 @@ exports.Town = function(town) {
 					immigrants++;
 				}
 			}
-			
-			this.contents["inhabitants"] += immigrants;
-			this.contents["immigrants"] += immigrants;
-			
-			this.addReport("Incoming immigrants", immigrants);
-			return immigrants;
+			if (immigrants > 0) {
+				if (this.contents["allowForeigners"]) {
+					this.contents["inhabitants"] += immigrants;
+					this.contents["immigrants"] += immigrants;
+					
+					this.addReport("Incoming immigrants", immigrants);
+					return immigrants;
+				} else {
+					this.addReport("Some foreigners trying to enter were kicked out");
+					return 0;
+				}	
+			} else {
+				return 0;
+			}
 		} else {
 			return 0;
 		}

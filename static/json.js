@@ -17,6 +17,11 @@ function refreshForm(town) {
 		$(target)[0].min = 0;
 		$(target)[0].max = town["inhabitants"];
 	}
+	if (town["allowForeigners"]) {
+		$("input[name=allowForeigners]").prop("checked", true);
+	} else {
+		$("input[name=allowForeigners]").prop("checked", false);
+	}
 }
 
 //Show current values. Grabbed from town local object

@@ -53,8 +53,9 @@ var isYourTown = function(req, res, town) {
 }
 
 //To avoid exceptions from unexpected / non-existent towns. (Else, Node will just hang)
-var thisTownExists = function(value) {
-	if (([null, false, 0, "(nil)"]).indexOf(value) >= 0) {
+//I can put error renders / codes here in the future.
+var thisTownExists = function(reply) { //reply from Redis query.
+	if (([null, false, 0, "(nil)"]).indexOf(reply) >= 0) {
 		return 0;
 	} else {
 		return 1;
@@ -130,6 +131,11 @@ app.get("/get_json/:town_id", function(req, res) {
 //If there's no problem nor error, one game week will pass and the client will receive new town JSON info.
 app.post("/send", bodyParser(), function(req, res) {
 	var workers = req.body;
+	if (workers["allowForeigners"] == undefined) {
+		workers["allowForeigners"] = 0;
+	} else {
+		workers["allowForeigners"] = 1;
+	} //jQuery... I do not comprehend.
 	var result = client.get("towns:" + workers["town_id"], function (err, replies) {
 		if (thisTownExists(replies)) {
 			var town = JSON.parse(replies);

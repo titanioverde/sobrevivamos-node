@@ -8,14 +8,31 @@ html
 		h4 #{message}
 		#register-form
 			form(method="post", action="signup")
+				h4 Mandatory information
 				div
-					label Username
-					input(type="test", name="username", id="form-username")
+					label User name
+					input(type="text", maxlength="16", name="username", id="form-username", required)
+				div
+					label Full name
+					input(type="text", maxlength="32", name="fullName", id="form-fullName", required)
+				div
+					label E-mail address
+					input(type="email", maxlength="64", name="email", id="form-email", required)
 				div
 					label Password
-					input(type="password", name="password", id="form-password")
+					input(type="password", maxlength="16", name="password", id="form-password", required)
 				div
 					label Password again
-					input(type="password", id="form-password2")
+					input(type="password", maxlength="16", id="form-password2", required)
+				h4 Optional information
+				div
+					label Bio
+					input(type="text", placeholder="Some info about you.", maxlength="140", name="bio", id="form-bio")
+				div
+					label URL
+					input(type="url", placeholder="Your website or social network profile.", maxlength="140", name="url", id="form-url")
+				div
+					label Location
+					input(type="text", placeholder="Where are you from?", maxlength="64", name="location", id="form-location")
 				div
 					input(type="submit")

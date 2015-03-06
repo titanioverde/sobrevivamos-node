@@ -264,20 +264,21 @@ app.get("/signup", function(req, res) {
 
 
 app.post("/signup", bodyParser(), function(req, res) {
-	var username = req.body.username;
-	var password = req.body.password;
-	if (hasSpace(username)) {
+	var body = req.body;
+	if (hasSpace(body.username)) {
 		res.render("signup", {message: "No spaces in your user name, please."});
 	} else {
-		client.hexists("users:" + username, "password", function (err, user) {
-			console.log(user);
+		if (body.fullName == "") body.fullName = body.username;
+		client.hexists("users:" + body.username, "password", function (err, user) {
 			if (err) { res.render("signup", {message: "Database error."}); }
 			if (user) { res.render("signup", {message: "User name already exists."}); }
 			else {
-				client.hset("users:" + username, "password", password, function(err, replies) {
-					console.log(replies);
+				client.hmset("users:" + body.username, "password", body.password,
+							 "fullName", body.fullName, "email", body.email,
+							 "bio", body.bio, "location", body.location,
+							 "url", body.url, function(err, replies) {
 					if (err) {
-						res.send(err);
+						res.send(500, err);
 					} else {
 						res.send("Signed up! Now you can <a href='login'>log in</a>.");
 					}
@@ -298,8 +299,8 @@ app.post("/login", bodyParser(), function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	client.hexists("users:" + username, "password", function (err, user) {
-		if (err) { res.send("Login error"); }
-		if (!user) { res.send("User unknown"); }
+		if (err) { res.send(500, "Login error: " + err); }
+		if (!user) { res.send(404, "User unknown"); }
 		client.hget("users:" + username, "password", function (err, pass) {
 			if (pass != password) { res.send("Wrong password"); }
 			else {
@@ -313,6 +314,18 @@ app.post("/login", bodyParser(), function(req, res) {
 app.get("/logout", function(req, res) {
 	req.session.destroy(function() {
 		res.send("Session closed.");
+	});
+});
+
+//Nice properties, towns and scores from a registered user.
+app.get("/profile/:user", function(req, res) {
+	var username = req.params.user;
+	client.hexists("users:" + username, "password", function(err, result) {
+		if (err) { res.send(500, "Profile error: " + err); }
+		if (!result) { res.send(404, "User unknown"); }
+		client.hmget("users:" + username, "fullName", "bio", "location", "url", "lastTime", function(err, replies) {
+			res.render("profile", {profile: replies});
+		});
 	});
 });
 

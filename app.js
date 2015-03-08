@@ -62,7 +62,6 @@ var thisTownExists = function(reply) { //reply from Redis query.
 	}
 }
 
-
 //Game controls. The most usual page.
 var controls = app.get("/controls_:town_id", function(req, res) {
 	var sessionID = sessionRead(req, res);
@@ -226,11 +225,8 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 	if (!(difficulties.hasOwnProperty(input))) {
 		res.send(404, "Town type unknown.");
 	} else {
-		console.log(difficulties);
 		difficulty = difficulties[input];
-		console.log(difficulty);
 		difficulty = JSON.stringify(difficulty);
-		console.log(difficulty);
 		difficulty = difficulty.replace(/[{}]/g, "");
 		client.get("next_id", function(err, replies) {
 			next_id = replies;
@@ -244,10 +240,10 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 				}
 			});
 		});
-
 	}
 });
 
+//No spaces in usernames, please.
 var hasSpace = function (text) {
 	return (text.indexOf(" ") + 1);
 }
@@ -328,7 +324,13 @@ var logout = app.get("/logout", function(req, res) {
 	});
 });
 
-//Nice properties, towns and scores from a registered user.
+
+var profile_own = app.get("/profile", function(req, res) {
+	var userID = sessionRead(req, res);
+	res.redirect("/profile/" + userID);
+});
+
+//Nice properties, towns and scores from any registered user.
 var profile = app.get("/profile/:user", function(req, res) {
 	var username = req.params.user;
 	client.hexists("users:" + username, "password", function(err, result) {
@@ -340,9 +342,9 @@ var profile = app.get("/profile/:user", function(req, res) {
 	});
 });
 
-var profile_own = app.get("/profile", function(req, res) {
-	var userID = sessionRead(req, res);
-	res.redirect("/profile/" + userID);
+
+var first_page = app.get("/", function (req, res) {
+	res.render("first");
 });
 
 //I wonder if I'll need a better server for productivity.

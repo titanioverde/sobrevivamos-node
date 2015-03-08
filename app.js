@@ -64,7 +64,7 @@ var thisTownExists = function(reply) { //reply from Redis query.
 
 
 //Game controls. The most usual page.
-app.get("/controls_:town_id", function(req, res) {
+var controls = app.get("/controls_:town_id", function(req, res) {
 	var sessionID = sessionRead(req, res);
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
 		if (thisTownExists(replies)) {
@@ -82,7 +82,7 @@ app.get("/controls_:town_id", function(req, res) {
 });
 
 //Read-only information about a town.
-app.get("/view_:town_id", function(req, res) {
+var view = app.get("/view_:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function(err, replies) {
 		if (thisTownExists(replies)) {
 			var contents = JSON.parse(replies);
@@ -95,8 +95,14 @@ app.get("/view_:town_id", function(req, res) {
 });
 
 //Just a number of towns owned by current user. Later it will show more info.
-app.get("/town_list", function(req, res) {
+var town_list_own = app.get("/town_list", function(req, res) {
 	var ownerID = sessionRead(req, res);
+	res.redirect("/town_list/" + ownerID);
+});
+
+//List of towns owned by this user.
+var town_list = app.get("/town_list/:user", function(req, res) {
+	var ownerID = req.params.user;
 	var list = client.smembers("ownedBy:" + ownerID, function(err, replies) {
 		if (err) {
 			res.send(err);
@@ -104,14 +110,19 @@ app.get("/town_list", function(req, res) {
 			if (replies.length > 0) {
 				res.render("town-list", {towns: replies, ownerID: ownerID});
 			} else {
-				res.redirect("/new_town");
+				if (ownerID == sessionRead(req, res)) {
+					res.redirect("/new_town");
+				} else {
+					res.send(404, "User unknown");
+				}
+				
 			}
 		}
 	});	
 });
 
 //Get the town stringed JSON object from Redis, recover its JSON shape and send it to the client.
-app.get("/get_json/:town_id", function(req, res) {
+var get_json = app.get("/get_json/:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
 		if (thisTownExists(replies)) {
 			var contents = JSON.parse(replies);
@@ -129,7 +140,7 @@ app.get("/get_json/:town_id", function(req, res) {
 
 //Receive set options and workers values from the client and process them through sobrevivamos.js.
 //If there's no problem nor error, one game week will pass and the client will receive new town JSON info.
-app.post("/send", bodyParser(), function(req, res) {
+var send = app.post("/send", bodyParser(), function(req, res) {
 	var workers = req.body;
 	if (workers["allowForeigners"] == undefined) {
 		workers["allowForeigners"] = 0;
@@ -166,7 +177,7 @@ app.post("/send", bodyParser(), function(req, res) {
 });
 
 //Immediate effect for current town.
-app.get("/killSheep/:town_id", function(req, res) {
+var killSheep = app.get("/killSheep/:town_id", function(req, res) {
 	client.get("towns:" + req.params.town_id, function (err, replies) {
 		if (thisTownExists(replies)) {
 			var town = JSON.parse(replies);
@@ -184,7 +195,7 @@ app.get("/killSheep/:town_id", function(req, res) {
 	});
 });
 
-app.get("/calculateScore/:town_id", function(req, res) {
+var calculateScore = app.get("/calculateScore/:town_id", function(req, res) {
 	client.get("towns:" + req.params.town_id, function (err, replies) {
 		if (thisTownExists(replies)) {
 			var town = JSON.parse(replies);
@@ -202,14 +213,13 @@ app.get("/calculateScore/:town_id", function(req, res) {
 	});
 });
 
-app.get("/new_town", function(req, res) {
+var new_town_own = app.get("/new_town", function(req, res) {
 	var dif_list = Object.keys(difficulties);
 	res.render("new-town", {dif_list: dif_list, difficulties: difficulties});
 });
 
 //Generate a new Redis "towns:" string with initial values.
-//ToDo: difficulties
-app.get("/new_town/:difficulty", function(req, res) {
+var new_town = app.get("/new_town/:difficulty", function(req, res) {
 	var sessionID = sessionRead(req, res);
 	var next_id;
 	var input = req.params.difficulty;
@@ -246,7 +256,7 @@ var hasSpace = function (text) {
 var sessionRead = function (req, res, callback) {
 	var ownerID = 0;	
 	if (!(req.session.ownerID)) {
-		ownerID = "s" + Math.round(Math.random() * 1000000);
+		ownerID = "s" + Math.round((Math.random() * 9000000) + 1000000);
 		req.session.ownerID = ownerID;
 	} else {
 		ownerID = req.session.ownerID;
@@ -257,13 +267,13 @@ var sessionRead = function (req, res, callback) {
 	return ownerID;	
 };
 
-
-app.get("/signup", function(req, res) {
+//Signup form
+var signup_get = app.get("/signup", function(req, res) {
 	res.render("signup", {message: "Please register."});
 });
 
-
-app.post("/signup", bodyParser(), function(req, res) {
+//Signup process
+var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 	var body = req.body;
 	if (hasSpace(body.username)) {
 		res.render("signup", {message: "No spaces in your user name, please."});
@@ -288,14 +298,15 @@ app.post("/signup", bodyParser(), function(req, res) {
 	}
 });
 
-
-app.get("/login", function(req, res) {
+//Login form
+var login_get = app.get("/login", function(req, res) {
 	sessionRead(req, res, function() {
 		res.render("login", {username: req.session.ownerID});
 	});	
 });
 
-app.post("/login", bodyParser(), function(req, res) {
+//Login process
+var login_post = app.post("/login", bodyParser(), function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	client.hexists("users:" + username, "password", function (err, user) {
@@ -311,22 +322,27 @@ app.post("/login", bodyParser(), function(req, res) {
 	});
 });
 
-app.get("/logout", function(req, res) {
+var logout = app.get("/logout", function(req, res) {
 	req.session.destroy(function() {
 		res.send("Session closed.");
 	});
 });
 
 //Nice properties, towns and scores from a registered user.
-app.get("/profile/:user", function(req, res) {
+var profile = app.get("/profile/:user", function(req, res) {
 	var username = req.params.user;
 	client.hexists("users:" + username, "password", function(err, result) {
 		if (err) { res.send(500, "Profile error: " + err); }
-		if (!result) { res.send(404, "User unknown"); }
+		if (!result) { res.send(404, "User unknown or with no profile"); }
 		client.hmget("users:" + username, "fullName", "bio", "location", "url", "lastTime", function(err, replies) {
 			res.render("profile", {profile: replies});
 		});
 	});
+});
+
+var profile_own = app.get("/profile", function(req, res) {
+	var userID = sessionRead(req, res);
+	res.redirect("/profile/" + userID);
 });
 
 //I wonder if I'll need a better server for productivity.

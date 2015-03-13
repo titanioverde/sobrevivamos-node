@@ -9,3 +9,7 @@ html
 			for town in towns
 				li
 					a(href="/controls_#{town}") #{town}
+					
+		if !guest
+			p
+				a(href="/profile/#{ownerID}") View profile

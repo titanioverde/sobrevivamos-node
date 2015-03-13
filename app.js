@@ -31,6 +31,10 @@ var difficulties = {
 	5: { "townType": "Extreme", "difficulty": 5, "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 9, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
 }
 
+var isGuest = function(username) {
+	return /s{1}\d{7}/.test(username);
+}
+
 
 //Converts a report array to a formatted string.
 var reportFromList = function(array, number) {
@@ -107,7 +111,9 @@ var town_list = app.get("/town_list/:user", function(req, res) {
 			res.send(err);
 		} else {
 			if (replies.length > 0) {
-				res.render("town-list", {towns: replies, ownerID: ownerID});
+				var guest = isGuest(ownerID);
+				console.log(guest);
+				res.render("town-list", {towns: replies, ownerID: ownerID, guest: guest});
 			} else {
 				if (ownerID == sessionRead(req, res)) {
 					res.redirect("/new_town");
@@ -337,7 +343,7 @@ var profile = app.get("/profile/:user", function(req, res) {
 		if (err) { res.send(500, "Profile error: " + err); }
 		if (!result) { res.send(404, "User unknown or with no profile"); }
 		client.hmget("users:" + username, "fullName", "bio", "location", "url", "lastTime", function(err, replies) {
-			res.render("profile", {profile: replies});
+			res.render("profile", {profile: replies, username: username});
 		});
 	});
 });

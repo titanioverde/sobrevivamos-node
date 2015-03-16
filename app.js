@@ -26,9 +26,12 @@ app.use(app.router);
 
 
 var difficulties = {
-	0: { "townType": "Novice", "difficulty": 0, "inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 25, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
-	1: { "townType": "Easy", "difficulty": 1, "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "weeksWithoutDisaster": 12 },
-	5: { "townType": "Extreme", "difficulty": 5, "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 9, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
+	0: { "townType": "Novice", "difficulty": 0, "gameMode": "simple","inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 25, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
+	1: { "townType": "Easy", "difficulty": 1, "gameMode": "simple", "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "weeksWithoutDisaster": 12 },
+	2: { "townType": "Moderate", "difficulty": 2, "gameMode": "simple", "inhabitants": 6, "sheeps": 1, "food": 35, "structure": 60, "safety": 10, "garbage": 20, "baseSafety": 10, "extraSafety": 6, "weeksWithoutDisaster": 10 },
+	3: { "townType": "Hard", "difficulty": 3, "gameMode": "simple", "inhabitants": 4, "sheeps": 0, "food": 18, "structure": 40, "safety": 5, "garbage": 25, "baseSafety": 5, "extraSafety": 4, "weeksWithoutDisaster": 9 },
+	4: { "townType": "Mania", "difficulty": 4, "gameMode": "simple", "inhabitants": 3, "sheeps": 0, "food": 12, "structure": 28, "safety": 2, "garbage": 30, "baseSafety": 2, "extraSafety": 2, "weeksWithoutDisaster": 8 },
+	5: { "townType": "Extreme", "difficulty": 5, "gameMode": "simple", "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 9, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
 }
 
 var isGuest = function(username) {

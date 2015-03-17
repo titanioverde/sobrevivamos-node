@@ -1,0 +1,13 @@
+body {
+	background-image: url("/romanticlandscape.jpg");
+	background-size: cover;
+	backgroung-position-x: 0%;
+	background-position-y: 50%;
+	color: white;
+	text-align: center;
+	
+}
+
+a {
+	color: #DDDDDD;
+}

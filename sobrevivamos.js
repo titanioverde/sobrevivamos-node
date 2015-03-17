@@ -2,7 +2,6 @@
 //Game core class and procedures.
 
 exports.Town = function(town) {
-	console.log("Allow" + town.allowForeigners);
 	this.contents = {
 		//Important current attributes
 		"owner": town.owner,
@@ -488,6 +487,7 @@ exports.Town = function(town) {
 				statistics.push(disasterComing());
 				statistics.push(calculateScore());
 				//statistics.push(aNewWeek());
+				finishReport();
 				contents["week"]++;
 				gameIsOver();
 			}

@@ -26,12 +26,12 @@ app.use(app.router);
 
 
 var difficulties = {
-	0: { "townType": "Novice", "difficulty": 0, "gameMode": "simple","inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 25, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
-	1: { "townType": "Easy", "difficulty": 1, "gameMode": "simple", "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 15, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "weeksWithoutDisaster": 12 },
-	2: { "townType": "Moderate", "difficulty": 2, "gameMode": "simple", "inhabitants": 6, "sheeps": 1, "food": 35, "structure": 60, "safety": 10, "garbage": 20, "baseSafety": 10, "extraSafety": 6, "weeksWithoutDisaster": 10 },
-	3: { "townType": "Hard", "difficulty": 3, "gameMode": "simple", "inhabitants": 4, "sheeps": 0, "food": 18, "structure": 40, "safety": 5, "garbage": 25, "baseSafety": 5, "extraSafety": 4, "weeksWithoutDisaster": 9 },
-	4: { "townType": "Mania", "difficulty": 4, "gameMode": "simple", "inhabitants": 3, "sheeps": 0, "food": 12, "structure": 28, "safety": 2, "garbage": 30, "baseSafety": 2, "extraSafety": 2, "weeksWithoutDisaster": 8 },
-	5: { "townType": "Extreme", "difficulty": 5, "gameMode": "simple", "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 9, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
+	0: { "townType": "Novice", "difficulty": 0, "gameMode": "simple","inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 35, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
+	1: { "townType": "Easy", "difficulty": 1, "gameMode": "simple", "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 23, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "weeksWithoutDisaster": 12 },
+	2: { "townType": "Moderate", "difficulty": 2, "gameMode": "simple", "inhabitants": 6, "sheeps": 1, "food": 35, "structure": 60, "safety": 16, "garbage": 20, "baseSafety": 10, "extraSafety": 6, "weeksWithoutDisaster": 10 },
+	3: { "townType": "Hard", "difficulty": 3, "gameMode": "simple", "inhabitants": 4, "sheeps": 0, "food": 18, "structure": 40, "safety": 9, "garbage": 25, "baseSafety": 5, "extraSafety": 4, "weeksWithoutDisaster": 9 },
+	4: { "townType": "Mania", "difficulty": 4, "gameMode": "simple", "inhabitants": 3, "sheeps": 0, "food": 12, "structure": 28, "safety": 4, "garbage": 30, "baseSafety": 2, "extraSafety": 2, "weeksWithoutDisaster": 8 },
+	5: { "townType": "Extreme", "difficulty": 5, "gameMode": "simple", "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 10, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
 }
 
 var isGuest = function(username) {
@@ -115,7 +115,6 @@ var town_list = app.get("/town_list/:user", function(req, res) {
 		} else {
 			if (replies.length > 0) {
 				var guest = isGuest(ownerID);
-				console.log(guest);
 				res.render("town-list", {towns: replies, ownerID: ownerID, guest: guest});
 			} else {
 				if (ownerID == sessionRead(req, res)) {
@@ -123,7 +122,6 @@ var town_list = app.get("/town_list/:user", function(req, res) {
 				} else {
 					res.send(404, "User unknown");
 				}
-				
 			}
 		}
 	});	
@@ -239,12 +237,12 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 		difficulty = difficulty.replace(/[{}]/g, "");
 		client.get("next_id", function(err, replies) {
 			next_id = replies;
-			//ToDo: start next_id if (nil)
+			if (!(next_id)) next_id = 1;
 			var change = client.set("towns:" + next_id, '{"owner": "' + sessionID +'", ' + difficulty + ', "week": 1, "gatherers": 0, "builders": 0, "defenders": 0, "cleaners": 0, "gameOver": 0 }', function(err, replies) {
 				if (err) throw (err);
 				else {
 					var new_id = client.set("next_id", parseInt(next_id) + 1);
-					console.log(client.sadd("ownedBy:" + sessionID, next_id));
+					client.sadd("ownedBy:" + sessionID, next_id);
 					res.send("Town " + next_id + " generated. <a href='/controls_" + next_id + "'>Come in</a>."); //Provisional
 				}
 			});

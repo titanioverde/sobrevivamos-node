@@ -1,0 +1,102 @@
+{
+	"Arcade turn-based survival strategy": "Arcade estratégico de supervivencia basado en turnos",
+	"Then Let's Survive": "Pues Sobrevivamos",
+	
+	//Difficulty levels
+	"New town": "Nuevo pueblo",
+	"Select a type of town you would like to help.": "Escoge un tipo de pueblo al que te gustaría ayudar.",
+	"Novice": "Novato",
+	"Easy": "Fácil",
+	"Moderate": "Moderado",
+	"Hard": "Difícil",
+	"Mania": "Maníaco",
+	"Extreme": "Extremo",
+	"simple": "simple",
+	"advanced": "avanzado",
+	
+	//Properties and statistics
+	"Town": "Pueblo",
+	"Week": "Semana",
+	"Score": "Puntuación",
+	"Inhabitants": "Habitantes",
+	"Idles": "Ociosos",
+	"Sheeps": "Ovejas",
+	"Gatherers": "Recolectores",
+	"Builders": "Constructores",
+	"Defenders": "Defensores",
+	"Cleaners": "Limpiadores",
+	"Food": "Alimento",
+	"Structure": "Estructura",
+	"Safety": "Seguridad",
+	"Garbage": "Residuos",
+	
+	//Controls GUI text
+	"Instructions booklet": "Manual de instrucciones",
+	"Game Over": "Fin De La Partida",
+	"Victory!": "¡Victoria!",
+	"Do you want to try again in another town?": "¿Quieres intentarlo de nuevo en otro pueblo?",
+	"Butcher": "Matadero",
+	"Allow foreigners": "Permitir forasteros",
+	"End turn": "Fin del turno",
+	
+	//Technical text
+	"Log in": "Iniciar sesión",
+	"Sign up": "Registrar usuario",
+	"List of your towns": "Listado de tus pueblos",
+	"Start on a new town": "Comenzar en un nuevo pueblo",
+	"Current user": "Usuario actual",
+	"Username": "Nombre de usuario",
+	"Password": "Contraseña",
+	"Are you a new user?": "¿Eres un usuario nuevo?",
+	
+	//Sign up form
+	"Mandatory information": "Información obligatoria",
+	"Full name": "Nombre completo",
+	"E-mail address": "Dirección de e-mail",
+	"Password again": "Contraseña otra vez",
+	"Optional information": "Información opcional",
+	"Gender": "Sexo",
+	"Bio": "Bio",
+	"URL": "URL",
+	"Location": "Lugar",
+	"Did you sign up before?": "¿Ya te habías registrado?",
+	
+	//User profile
+	"%s's profile": "El perfil de %s",
+	"Played last time:": "Última vez que ha jugado:",
+	"Towns list": "Listado de pueblos",
+	
+	//Towns list
+	"%s's towns": "Los pueblos de %s",
+	"View profile": "Ver perfil",
+	"This town never existed or does not exist anymore.": "Este pueblo nunca existió o ya no existe.",
+	
+	
+	//Reports
+	"Dead inhabitants by pulmony": "Habitantes muertos por pulmonía",
+	"Dead sheeps by pulmony": "Ovejas muertas por pulmonía",
+	"Dead inhabitants by hunger": "Habitantes muertos de hambre",
+	"Dead inhabitants by high contamination": "Habitantes muertos por alta contaminación",
+	"Fled inhabitants due to lack of safety": "Habitantes fugados por falta de seguridad",
+	"Newborn inhabitants": "Habitantes recién nacidos",
+	"Newborn sheeps": "Ovejas recién nacidas",
+	"Incoming immigrants": "Inmigrantes recién llegados",
+	"Some foreigners trying to enter were kicked out": "Algunos inmigrantes que intentaron entrar han sido expulsados",
+	"Time flows away..": "El tiempo fluye..",
+	"People has disappeared. No one will born, and no one will come. This is no longer a town": "La gente ha desaparecido. Nadie nacerá, y nadie vendrá. Esto ya no es un pueblo",
+	"The contamination in this town has reached lethal levels. No living being can remain here": "La contaminación en este pueblo ha alcanzado niveles letales. Ningún ser vivo puede permanecer aquí",
+	"One year has already passed since you arrived here. You did a good job bringing hope to them, so they can continue growing by themselves. Now you should walk away, looking for more survivors who need your help": "Ya ha pasado un año desde que llegaste aquí. Has hecho un buen trabajo trayéndoles esperanza, así que pueden continuar creciendo por su cuenta. Ahora debes seguir caminando, en busca de más supervivientes que necesiten tu ayuda",
+	"A storm is approaching. We shall get protected": "Se avecina una tormenta. Deberíamos ponernos a cubierto",
+	"A storm fell here. Your town was safe enough to prevent significant damages": "Ha caído una tormenta. Tu pueblo estaba lo bastante bien protegido como para prevenir daños importantes",
+	"A storm fell here. Structure damaged. Dead inhabitants": "Ha caído una tormenta. Daños en la estructura. Habitantes muertos",
+	"It seems a burglar sneaked in our town and stole some food": "Al parecer un ratero se ha colado en nuestro pueblo y nos ha robado alimento",
+	"A burglar tried to steal food. But was detected on time and ran away empty-handed": "Un ratero ha intentado robarnos alimento. Pero fue detectado a tiempo y huyó con las manos vacías",
+	"Someone heard wolf cries in the nearby. We shall get protected": "Alguien ha oído aullidos de lobos en las cercanías. Deberías protegernos",
+	"Our town was invaded by a wolf pack. They ate some of our sheeps. Dead inhabitants": "Nuestro pueblo ha sido invadido por una manada de lobos. Han devorado a algunas de nuestras ovejas. Habitantes muertos",
+	"A wolf pack tried to invade our town, but were succesfully rejected": "Una manada de lobos ha intentado invadir nuestro pueblo, pero ha sido rechazada con éxito",
+	
+	//Disasters
+	"storm": "tormenta",
+	"burglar": "ratero",
+	"wolf pack": "manada de lobos"
+}

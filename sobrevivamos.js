@@ -1,6 +1,18 @@
 //Pues Sobrevivamos / Then Let's Survive
 //Game core class and procedures.
 
+var i18n = require("i18next");
+var i18n_options = {
+	getAsync: false,
+	cookieName: "sobrevivamos-lang",
+	preload: ["en", "es"],
+	lng: "es",
+	debug: true
+}
+i18n.init(i18n_options);
+var __ = i18n.t;
+
+
 exports.Town = function(town) {
 	this.contents = {
 		//Important current attributes
@@ -326,7 +338,7 @@ exports.Town = function(town) {
 	
 	this.finishReport = function() {
 		if (this.reports.length < 1) {
-			this.addReport("Time flows away..");
+			this.addReport(__("Time flows away.."));
 		}
 	}
 	
@@ -338,13 +350,13 @@ exports.Town = function(town) {
 	this.gameIsOver = function() {
 		//One or less inhabitants with no safety.
 		if ((this.contents["inhabitants"] <= 1) && (this.contents["safety"] < 50)) {
-			this.addReport("People has disappeared. No one will born, and no one will come. This is no longer a town");
+			this.addReport(__("gameOver0"));
 			this.contents["gameOver"] = 1;
 		}
 		
 		//100% garbage
 		if (this.contents["garbage"] >= 100) {
-			this.addReport("The contamination in this town has reached lethal levels. No living being can remain here");
+			this.addReport(__("gameOver1"));
 			this.contents["gameOver"] = 1;
 		}
 		

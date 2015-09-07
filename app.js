@@ -9,6 +9,16 @@ var session = require("express-session");
 var redis = require("redis");
 var RedisStore = require("connect-redis")(session);
 var client = redis.createClient();
+var i18n = require("i18next");
+var i18n_options = {
+	getAsync: false,
+	cookieName: "sobrevivamos-lang",
+	preload: ["en", "es"],
+	lng: "es",
+	debug: true
+}
+i18n.init(i18n_options);
+var __ = i18n.t;
 
 //The game core
 var sobrevivamos = require("./sobrevivamos");
@@ -22,7 +32,9 @@ app.use(session({ key: "sobrevivamos-session", cookie: {maxAge: 604801000}, secr
 //app.use(passport.initialize());
 app.set("view engine", "jade");
 app.set("views", "./views");
+app.use(i18n.handle);
 app.use(app.router);
+i18n.registerAppHelper(app);
 
 
 var difficulties = {
@@ -272,7 +284,7 @@ var sessionRead = function (req, res, callback) {
 
 //Signup form
 var signup_get = app.get("/signup", function(req, res) {
-	res.render("signup", {message: "Please register."});
+	res.render("signup", {message: __("Please register")});
 });
 
 //Signup process
@@ -352,6 +364,10 @@ var profile = app.get("/profile/:user", function(req, res) {
 
 var first_page = app.get("/", function (req, res) {
 	res.render("first");
+});
+
+var lang_test = app.get("/lang", function (req, res) {
+	res.send(__("testring") + i18n.lng());
 });
 
 //I wonder if I'll need a better server for productivity.

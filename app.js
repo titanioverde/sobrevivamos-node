@@ -14,11 +14,12 @@ var i18n_options = {
 	getAsync: false,
 	cookieName: "sobrevivamos-lang",
 	preload: ["en", "es"],
+	fallbackLng: "en",
 	lng: "es",
 	debug: true
 }
 i18n.init(i18n_options);
-var __ = i18n.t;
+var tr = i18n.t;
 
 //The game core
 var sobrevivamos = require("./sobrevivamos");
@@ -38,12 +39,12 @@ i18n.registerAppHelper(app);
 
 
 var difficulties = {
-	0: { "townType": "Novice", "difficulty": 0, "gameMode": "simple","inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 35, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
-	1: { "townType": "Easy", "difficulty": 1, "gameMode": "simple", "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 23, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "weeksWithoutDisaster": 12 },
-	2: { "townType": "Moderate", "difficulty": 2, "gameMode": "simple", "inhabitants": 6, "sheeps": 1, "food": 35, "structure": 60, "safety": 16, "garbage": 20, "baseSafety": 10, "extraSafety": 6, "weeksWithoutDisaster": 10 },
-	3: { "townType": "Hard", "difficulty": 3, "gameMode": "simple", "inhabitants": 4, "sheeps": 0, "food": 18, "structure": 40, "safety": 9, "garbage": 25, "baseSafety": 5, "extraSafety": 4, "weeksWithoutDisaster": 9 },
-	4: { "townType": "Mania", "difficulty": 4, "gameMode": "simple", "inhabitants": 3, "sheeps": 0, "food": 12, "structure": 28, "safety": 4, "garbage": 30, "baseSafety": 2, "extraSafety": 2, "weeksWithoutDisaster": 8 },
-	5: { "townType": "Extreme", "difficulty": 5, "gameMode": "simple", "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 10, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
+	0: { "townType": "Novice", "difficulty": 0, "gameMode": "Simple","inhabitants": 12, "sheeps": 3, "food": 80, "structure": 100, "safety": 35, "garbage": 8, "baseSafety": 25, "extraSafety": 10, "weeksWithoutDisaster": 14 },
+	1: { "townType": "Easy", "difficulty": 1, "gameMode": "Simple", "inhabitants": 8, "sheeps": 2, "food": 50, "structure": 80, "safety": 23, "garbage": 15, "baseSafety": 15, "extraSafety": 8, "weeksWithoutDisaster": 12 },
+	2: { "townType": "Moderate", "difficulty": 2, "gameMode": "Simple", "inhabitants": 6, "sheeps": 1, "food": 35, "structure": 60, "safety": 16, "garbage": 20, "baseSafety": 10, "extraSafety": 6, "weeksWithoutDisaster": 10 },
+	3: { "townType": "Hard", "difficulty": 3, "gameMode": "Simple", "inhabitants": 4, "sheeps": 0, "food": 18, "structure": 40, "safety": 9, "garbage": 25, "baseSafety": 5, "extraSafety": 4, "weeksWithoutDisaster": 9 },
+	4: { "townType": "Mania", "difficulty": 4, "gameMode": "Simple", "inhabitants": 3, "sheeps": 0, "food": 12, "structure": 28, "safety": 4, "garbage": 30, "baseSafety": 2, "extraSafety": 2, "weeksWithoutDisaster": 8 },
+	5: { "townType": "Extreme", "difficulty": 5, "gameMode": "Simple", "inhabitants": 2, "sheeps": 0, "food": 6, "structure": 12, "safety": 10, "garbage": 35, "baseSafety": 9, "extraSafety": 1, "weeksWithoutDisaster": 6 }
 }
 
 var isGuest = function(username) {
@@ -53,7 +54,7 @@ var isGuest = function(username) {
 
 //Converts a report array to a formatted string.
 var reportFromList = function(array, number) {
-	var result = "Week " + number + " - ";
+	var result = tr("Week") + " " + number + " - ";
 	for (var i in array) {
 		result = result + array[i] + " ";
 	}
@@ -132,7 +133,7 @@ var town_list = app.get("/town_list/:user", function(req, res) {
 				if (ownerID == sessionRead(req, res)) {
 					res.redirect("/new_town");
 				} else {
-					res.send(404, "User unknown");
+					res.send(404, tr("userUnknown"));
 				}
 			}
 		}
@@ -242,7 +243,7 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 	var next_id;
 	var input = req.params.difficulty;
 	if (!(difficulties.hasOwnProperty(input))) {
-		res.send(404, "Town type unknown.");
+		res.send(404, tr("townTypeUnknown"));
 	} else {
 		difficulty = difficulties[input];
 		difficulty = JSON.stringify(difficulty);
@@ -255,7 +256,7 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 				else {
 					var new_id = client.set("next_id", parseInt(next_id) + 1);
 					client.sadd("ownedBy:" + sessionID, next_id);
-					res.send("Town " + next_id + " generated. <a href='/controls_" + next_id + "'>Come in</a>."); //Provisional
+					res.send("Town " + next_id + " generated. <a href='/controls_" + next_id + "'>Come in</a>."); //ToDo: Convert to Jade
 				}
 			});
 		});
@@ -284,19 +285,19 @@ var sessionRead = function (req, res, callback) {
 
 //Signup form
 var signup_get = app.get("/signup", function(req, res) {
-	res.render("signup", {message: __("Please register")});
+	res.render("signup", {message: tr("pleaseRegister")});
 });
 
 //Signup process
 var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 	var body = req.body;
 	if (hasSpace(body.username)) {
-		res.render("signup", {message: "No spaces in your user name, please."});
+		res.render("signup", {message: "noSpaces"});
 	} else {
 		if (body.fullName == "") body.fullName = body.username;
 		client.hexists("users:" + body.username, "password", function (err, user) {
-			if (err) { res.render("signup", {message: "Database error."}); }
-			if (user) { res.render("signup", {message: "User name already exists."}); }
+			if (err) { res.render("signup", {message: tr("dbError")}); }
+			if (user) { res.render("signup", {message: tr("existingUser")}); }
 			else {
 				client.hmset("users:" + body.username, "password", body.password,
 							 "fullName", body.fullName, "email", body.email,
@@ -305,7 +306,7 @@ var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 					if (err) {
 						res.send(500, err);
 					} else {
-						res.send("Signed up! Now you can <a href='login'>log in</a>.");
+						res.send("Signed up! Now you can <a href='login'>log in</a>."); //ToDo: Convert to Jade
 					}
 				});
 			}
@@ -325,10 +326,10 @@ var login_post = app.post("/login", bodyParser(), function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	client.hexists("users:" + username, "password", function (err, user) {
-		if (err) { res.send(500, "Login error: " + err); }
-		if (!user) { res.send(404, "User unknown"); }
+		if (err) { res.send(500, tr("loginError") + err); }
+		if (!user) { res.send(404, tr("userUnknown")); }
 		client.hget("users:" + username, "password", function (err, pass) {
-			if (pass != password) { res.send("Wrong password"); }
+			if (pass != password) { res.send(tr("wrongPassword")); }
 			else {
 				req.session.ownerID = username;
 				res.redirect("/town_list");
@@ -339,7 +340,7 @@ var login_post = app.post("/login", bodyParser(), function(req, res) {
 
 var logout = app.get("/logout", function(req, res) {
 	req.session.destroy(function() {
-		res.send("Session closed.");
+		res.send(tr("loggedOut"));
 	});
 });
 
@@ -353,8 +354,8 @@ var profile_own = app.get("/profile", function(req, res) {
 var profile = app.get("/profile/:user", function(req, res) {
 	var username = req.params.user;
 	client.hexists("users:" + username, "password", function(err, result) {
-		if (err) { res.send(500, "Profile error: " + err); }
-		if (!result) { res.send(404, "User unknown or with no profile"); }
+		if (err) { res.send(500, tr("profileError") + err); }
+		if (!result) { res.send(404, tr("userUnknown")); }
 		client.hmget("users:" + username, "fullName", "bio", "location", "url", "lastTime", function(err, replies) {
 			res.render("profile", {profile: replies, username: username});
 		});
@@ -367,7 +368,7 @@ var first_page = app.get("/", function (req, res) {
 });
 
 var lang_test = app.get("/lang", function (req, res) {
-	res.send(__("testring") + i18n.lng());
+	res.send(tr("testring") + i18n.lng());
 });
 
 //I wonder if I'll need a better server for productivity.

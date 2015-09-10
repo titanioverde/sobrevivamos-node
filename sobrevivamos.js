@@ -6,11 +6,12 @@ var i18n_options = {
 	getAsync: false,
 	cookieName: "sobrevivamos-lang",
 	preload: ["en", "es"],
+	fallbackLng: "en",
 	lng: "es",
 	debug: true
 }
 i18n.init(i18n_options);
-var __ = i18n.t;
+var tr = i18n.t;
 
 
 exports.Town = function(town) {
@@ -178,8 +179,8 @@ exports.Town = function(town) {
 			this.contents["sheeps"] -= sheeps;
 			this.posi("sheeps");
 			
-			this.addReport("Dead inhabitants by pulmony", inhabitants);
-			this.addReport("Dead sheeps by pulmony", sheeps);
+			this.addReport(tr("inhabPulmony"), inhabitants);
+			this.addReport(tr("sheepPulmony"), sheeps);
 			
 			return [inhabitants, sheeps];
 		} else {
@@ -201,7 +202,7 @@ exports.Town = function(town) {
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
-			this.addReport("Dead inhabitants by hunger", inhabitants);
+			this.addReport(tr("inhabHunger"), inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -219,7 +220,7 @@ exports.Town = function(town) {
 			this.contents["structure"] -= structure;
 			this.posi("structure");
 			
-			this.reports.push("Food and structure slightly damaged due to contamination.");
+			this.reports.push(tr("slightContamination"));
 			return [food, structure];
 		} else {
 			return [0, 0];
@@ -234,7 +235,7 @@ exports.Town = function(town) {
 			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
 			
-			this.addReport("Dead inhabitants by high contamination", inhabitants);
+			this.addReport(tr("inhabContamination"), inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -248,7 +249,7 @@ exports.Town = function(town) {
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
 			
-			this.addReport("Fled inhabitants due to lack of safety", inhabitants);
+			this.addReport(tr("inhabSafety"), inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -268,7 +269,7 @@ exports.Town = function(town) {
 			
 			this.contents["inhabitants"] += births;
 			this.contents["births"] += births;
-			this.addReport("Newborn inhabitants", births);
+			this.addReport(tr("inhabBorn"), births);
 			return births;
 		}
 		
@@ -290,7 +291,7 @@ exports.Town = function(town) {
 		}
 		
 		this.contents["sheeps"] += births;
-		this.addReport("Newborn sheeps", births);
+		this.addReport(tr("sheepBorn"), births);
 		return births;
 	}
 	
@@ -310,10 +311,10 @@ exports.Town = function(town) {
 					this.contents["inhabitants"] += immigrants;
 					this.contents["immigrants"] += immigrants;
 					
-					this.addReport("Incoming immigrants", immigrants);
+					this.addReport(tr("inhabCome"), immigrants);
 					return immigrants;
 				} else {
-					this.addReport("Some foreigners trying to enter were kicked out");
+					this.addReport(tr("inhabKicked"));
 					return 0;
 				}	
 			} else {
@@ -338,7 +339,7 @@ exports.Town = function(town) {
 	
 	this.finishReport = function() {
 		if (this.reports.length < 1) {
-			this.addReport(__("Time flows away.."));
+			this.addReport(tr("timeFlowsAway"));
 		}
 	}
 	
@@ -350,19 +351,19 @@ exports.Town = function(town) {
 	this.gameIsOver = function() {
 		//One or less inhabitants with no safety.
 		if ((this.contents["inhabitants"] <= 1) && (this.contents["safety"] < 50)) {
-			this.addReport(__("gameOver0"));
+			this.addReport(tr("gameOver0"));
 			this.contents["gameOver"] = 1;
 		}
 		
 		//100% garbage
 		if (this.contents["garbage"] >= 100) {
-			this.addReport(__("gameOver1"));
+			this.addReport(tr("gameOver1"));
 			this.contents["gameOver"] = 1;
 		}
 		
 		//52 weeks passed. Happy ending.
 		if ((this.contents["week"] >= 52) && (this.contents["gameOver"] == 0)) {
-			this.addReport("One year has already passed since you arrived here. You did a good job bringing hope to them, so they can continue growing by themselves. Now you should walk away, looking for more survivors who need your help");
+			this.addReport(tr("happyEnd"));
 			this.contents["gameOver"] = 1;
 		}
 	}
@@ -407,14 +408,14 @@ exports.Town = function(town) {
 			safety = 10;
 			this.contents["baseSafety"] -= safety;
 			this.posi(["safety"]);
-			this.addReport("A storm fell here. Your town was safe enough to prevent significant damages");
+			this.addReport(tr("stormSafe"));
 			result = "safe";
 		} else {
 			this.contents["baseSafety"] = 0;
 			inhabitants = Math.round((this.contents["inhabitants"] / 10) + (Math.random() * 3));
 			structure = 20;
 			if (inhabitants > this.contents["inhabitants"]) inhabitants = this.contents["inhabitants"]; //ToDo: control this globally. Else, there would be more bodies than inhabitants. ^_^u
-			this.addReport("A storm fell here. Structure damaged. Dead inhabitants", inhabitants);
+			this.addReport(tr("stormFail"), inhabitants);
 			result = "bad";
 		}
 		

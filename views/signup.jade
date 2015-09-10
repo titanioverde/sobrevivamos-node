@@ -4,38 +4,38 @@ html
 		title Let's Survive - Sign Up
 		
 	body
-		h1 Sign up
+		h1= t("signup")
 		h4 #{message}
 		#register-form
 			form(method="post", action="signup")
-				h4 Mandatory information
+				h4= t("mandatoryInfo")
 				div
-					label User name
+					label= t("Username")
 					input(type="text", maxlength="16", name="username", id="form-username", required)
 				div
-					label Full name
+					label= t("fullName")
 					input(type="text", maxlength="32", name="fullName", id="form-fullName", required)
 				div
-					label E-mail address
+					label= t("email")
 					input(type="email", maxlength="64", name="email", id="form-email", required)
 				div
-					label Password
+					label= t("Password")
 					input(type="password", maxlength="16", name="password", id="form-password", required)
 				div
-					label Password again
+					label= t("passwordAgain")
 					input(type="password", maxlength="16", id="form-password2", required)
-				h4 Optional information
+				h4= t("optionalInfo")
 				div
-					label Bio
-					input(type="text", placeholder="Some info about you.", maxlength="140", name="bio", id="form-bio")
+					label= t("Bio")
+					input(type="text", placeholder=t("Bio1"), maxlength="140", name="bio", id="form-bio")
 				div
-					label URL
-					input(type="url", placeholder="Your website or social network profile.", maxlength="140", name="url", id="form-url")
+					label= t("URL")
+					input(type="url", placeholder=t("URL1"), maxlength="140", name="url", id="form-url")
 				div
-					label Location
-					input(type="text", placeholder="Where are you from?", maxlength="64", name="location", id="form-location")
+					label= t("Location")
+					input(type="text", placeholder=t("Location1"), maxlength="64", name="location", id="form-location")
 				div
 					input(type="submit")
 		
-		p Did you sign up before?&nbsp;
-			a(href="/login") Log in.
+		p= t("didYouSignUp")
+			a(href="/login")= t("login")

@@ -2,17 +2,18 @@ doctype html5
 html
 	head
 		link(rel="stylesheet", href="first.css")
-		title Then Let's Survive
+		title= t("title1")
 		
 	body
-		h5 Arcade turn-based survival strategy
-		h1 Then Let's Survive
+		h5= t("title0")
+		h1= t("title1")
 		p
-			a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing") Instructions booklet
+			a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing")= t("booklet")
 		p
-			a(href="/town_list") List of your towns.
+			a(href="/town_list")= t("townList")
 		p
-			a(href="/new_town") Start on a new town.
+			a(href="/new_town")= t("newTown1")
 		p
-			a(href="/login") Log in.&nbsp;
-			a(href="/signup") Sign up.
+			a(href="/login")= t("login")
+			&nbsp;
+			a(href="/signup")= t("signup")

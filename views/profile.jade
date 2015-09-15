@@ -1,15 +1,22 @@
 doctype html5
 html
 	head
-		title Then Let's Survive - #{profile[0]}'s profile
+		title
+				!= t("title1")
+				&nbsp;-&nbsp;
+				!= t("whoProfile", {user: profile[0]})
 		
 	body
-		h3 #{profile[0]}'s profile
+		h3= t("whoProfile", {user: profile[0]})
 		p #{profile[1]}
-		p Location: #{profile[2]}
+		p
+				!= t("Location")
+				span :&nbsp;#{profile[2]}
 		p
 			a(href="#{profile[3]}") #{profile[3]}
-		p Played last time: #{profile[4]}
+		p
+				!= t("lastTime")
+				span :&nbsp;#{profile[4]}
 		
 		p
-			a(href="/town_list/#{username}") Towns list
+			a(href="/town_list/#{username}")= t("townList1")

@@ -52,7 +52,7 @@ exports.Town = function(town) {
 	
 	this.statistics = [];
 	this.reports = [];
-	this.disasterList = ["Storm"];
+	this.disasterList = ["storm"];
 	
 	
 	this.posi = function(property) {
@@ -375,7 +375,7 @@ exports.Town = function(town) {
 		
 		var result = [];
 		if (weeks == 1) {
-			this.addReport("A " + this.disasterList[this.contents["nextDisaster"]] + " is approaching. We shall get protected");
+			this.addReport(tr(this.disasterList[this.contents["nextDisaster"]] + "Near"));
 		}
 		if (weeks == 0) {
 			switch (this.contents["nextDisaster"]) {

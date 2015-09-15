@@ -2,13 +2,13 @@ doctype html
 html
 
 	head
-		title Then Let's Survive
+		title= t("title1")
 		
 	body
-		h3 This town never existed or does not exist anymore.
+		h3= t("townUnknown")
 		
 		p
-			a(href="/town_list") Your towns' list.
+			a(href="/town_list")= t("townList")
 			
 		p
-			a(href="/new_town") Look for a new town.
+			a(href="/new_town")= t("newTown1")

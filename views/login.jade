@@ -2,21 +2,26 @@ doctype html
 html
 
 	head
-		title Then Let's Survive - Login
+		title
+				!= t("title1")
+				&nbsp;-&nbsp;
+				!= t("login")
 	
 	body
-		h1 Login
-		p Current user: #{username}
+		h1= t("login")
+		p= t("currentUser")
+			span :&nbsp;#{username}
 		#login-form
 			form(method="post", action="login")
 				div
-					label Username
+					label= t("Username")
 					input(type="text", name="username", id="form-username")
 				div
-					label Password
+					label= t("Password")
 					input(type="password", name="password", id="form-password")
 				div
 					input(type="submit")
 					
-		p Are you a new user?&nbsp;
-			a(href="/signup") Sign up.
+		p= t("newUser")
+			&nbsp;
+			a(href="/signup")= t("signup")

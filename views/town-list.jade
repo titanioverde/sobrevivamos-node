@@ -1,10 +1,13 @@
 doctype html
 html
 	head
-		title Then Let's Survive - Your towns
+		title
+				!= t("title1")
+				&nbsp;-&nbsp;
+				!= t("townList1")
 	
 	body
-		h3 #{ownerID}'s towns.
+		h3= t("whoTowns", {user: ownerID})
 		ul
 			for town in towns
 				li
@@ -12,4 +15,4 @@ html
 					
 		if !guest
 			p
-				a(href="/profile/#{ownerID}") View profile
+				a(href="/profile/#{ownerID}")= t("viewProfile")

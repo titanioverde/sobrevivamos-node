@@ -2,12 +2,16 @@ doctype html
 html
 
 	head
-		title Then Let's Survive - New town
+		title
+				!= t("title1")
+				&nbsp;-&nbsp;
+				!= t("newTown")
 		link(rel="stylesheet", href="default.css")
 	
 	body
-		h3 Select a type of town you would like to help.
+		h3= t("townType")
 		ul
 			for dif in dif_list
 				li
-					a(href="new_town/#{dif}") #{dif} - #{difficulties[dif].townType}
+					a(href="new_town/#{dif}") #{dif} - 
+						snap= t(difficulties[dif].townType)

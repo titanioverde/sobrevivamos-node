@@ -7,7 +7,6 @@ var i18n_options = {
 	cookieName: "sobrevivamos-lang",
 	preload: ["en", "es"],
 	fallbackLng: "en",
-	lng: "es",
 	debug: true
 }
 i18n.init(i18n_options);

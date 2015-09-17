@@ -2,65 +2,73 @@ doctype html
 html
 
 	head
-		title Then Let's Survive
+		title= t("title1")
 		link(rel="stylesheet", href="default.css")
 		script(src="jquery.min.js")
 		script(src="json.js")
 		
 	body
-		h1 Then Let's Survive
+		h1= t("title1")
 		h6.instructions
-			a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing") Instructions booklet
+			a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing")= t("booklet")
 		.tryAgain
+			p= t("gameOver")
 			p
-				| Game Over. Do you want to try again in
-				a(href="/new_town") another town
-				| &#63;
+				a(href="/new_town")= t("tryAgain")
 		#controls
 			form(method="post")#mainForm
 				h5
-					| Week&nbsp;
+					!= t("Week")
+					| &nbsp;
 					span#week 0
 				h5
-					| Score&nbsp;
+					!= t("Score")
+					| &nbsp;
 					span#score ...
 				h6
-					| Inhabitants&nbsp;
+					!= t("Inhabitants")
+					| &nbsp;
 					span#inhabitants 0
 				h6
-					| Idles&nbsp;
+					!= t("Idles")
+					| &nbsp;
 					span#idles 0
 				h6
-					| Sheeps&nbsp;
+					!= t("Sheeps")
+					| &nbsp;
 					span#sheeps 0
-					button(id="killSheep") Butcher
+					button(id="killSheep")= t("Butcher")
 					
 				div
-					label Gatherers
+					label= t("Gatherers")
 					input(type="number", name="gatherers", id="gatherers_control")
-					| Food&nbsp;
+					!= t("Food")
+					| &nbsp;
 					span#food 0
 				div
-					label Builders
+					label= t("Builders")
 					input(type="number", name="builders", id="builders_control")
-					| Structure&nbsp;
+					!= t("Structure")
+					| &nbsp;
 					span#structure 0
 				div
-					label Defenders
+					label= t("Defenders")
 					input(type="number", name="defenders", id="defenders_control")
-					| Safety&nbsp;
+					!= t("Safety")
+					| &nbsp;
 					span#safety 0
 				div
-					label Cleaners
+					label= t("Cleaners")
 					input(type="number", name="cleaners", id="cleaners_control")
-					| Garbage&nbsp;
+					!= t("Garbage")
+					| &nbsp;
 					span#garbage 0
 					| %
 				div
-					label Allow foreigners
+					label= t("allowForeigners")
 					input(type="checkbox", name="allowForeigners", id="allowForeigners_control")
 				input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
-				button(id="next_week") End turn
+				button(id="next_week")= t("endTurn")
 				
 		#reports
 			

@@ -15,7 +15,6 @@ var i18n_options = {
 	cookieName: "sobrevivamos-lang",
 	preload: ["en", "es"],
 	fallbackLng: "en",
-	lng: "es",
 	debug: true
 }
 i18n.init(i18n_options);
@@ -256,7 +255,7 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 				else {
 					var new_id = client.set("next_id", parseInt(next_id) + 1);
 					client.sadd("ownedBy:" + sessionID, next_id);
-					res.send("Town " + next_id + " generated. <a href='/controls_" + next_id + "'>Come in</a>."); //ToDo: Convert to Jade
+					res.render("town-generated", {next_id: next_id});
 				}
 			});
 		});
@@ -306,7 +305,7 @@ var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 					if (err) {
 						res.send(500, err);
 					} else {
-						res.send("Signed up! Now you can <a href='login'>log in</a>."); //ToDo: Convert to Jade
+						res.render("signup-done");
 					}
 				});
 			}

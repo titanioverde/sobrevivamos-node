@@ -1,0 +1,10 @@
+doctype html
+html
+
+	head
+		title= t("title1")
+		
+	body
+		h3= t("townGen0", {number: next_id})
+		h4
+			a(href="/controls_#{next_id}")= t("townGen1")

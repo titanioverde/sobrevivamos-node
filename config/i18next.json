@@ -1,0 +1,7 @@
+{
+	"getAsync": false,
+	"cookieName": "sobrevivamos-lang",
+	"preload": ["en", "es"],
+	"fallbackLng": "en",
+	"debug": true
+}

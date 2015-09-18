@@ -2,13 +2,7 @@
 //Game core class and procedures.
 
 var i18n = require("i18next");
-var i18n_options = {
-	getAsync: false,
-	cookieName: "sobrevivamos-lang",
-	preload: ["en", "es"],
-	fallbackLng: "en",
-	debug: true
-}
+var i18n_options = require("./config/i18next.json");
 i18n.init(i18n_options);
 var tr = i18n.t;
 

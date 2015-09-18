@@ -10,13 +10,7 @@ var redis = require("redis");
 var RedisStore = require("connect-redis")(session);
 var client = redis.createClient();
 var i18n = require("i18next");
-var i18n_options = {
-	getAsync: false,
-	cookieName: "sobrevivamos-lang",
-	preload: ["en", "es"],
-	fallbackLng: "en",
-	debug: true
-}
+var i18n_options = require("./config/i18next.json");
 i18n.init(i18n_options);
 var tr = i18n.t;
 
@@ -368,6 +362,11 @@ var first_page = app.get("/", function (req, res) {
 
 var lang_test = app.get("/lang", function (req, res) {
 	res.send(tr("testring") + i18n.lng());
+});
+
+var lang_change = app.get("/lang/:lang", function (req, res) {
+	res.cookie("sobrevivamos-lang", req.params.lang);
+	res.redirect("/");
 });
 
 //I wonder if I'll need a better server for productivity.

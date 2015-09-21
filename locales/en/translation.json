@@ -41,6 +41,7 @@
 	"Butcher": "Butcher",
 	"allowForeigners": "Allow foreigners",
 	"endTurn": "End turn",
+	"background0": "Background: Romantic Landscape with Ruined Tower. (Thomas Cole)",
 	
 	"login": "Log in",
 	"signup": "Sign up",
@@ -60,6 +61,7 @@
 	"loginError": "Login error: ",
 	"signupDone0": "Signed up!",
 	"signupDone1": "Now you can log in.",
+	"submitForm0": "Submit",
 	
 	"mandatoryInfo": "Mandatory information",
 	"fullName": "Full name",

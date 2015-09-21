@@ -4,7 +4,7 @@
 var i18n = require("i18next");
 var i18n_options = require("./config/i18next.json");
 i18n.init(i18n_options);
-var tr = i18n.t;
+var t = i18n.t;
 
 
 exports.Town = function(town) {
@@ -172,8 +172,8 @@ exports.Town = function(town) {
 			this.contents["sheeps"] -= sheeps;
 			this.posi("sheeps");
 			
-			this.addReport(tr("inhabPulmony"), inhabitants);
-			this.addReport(tr("sheepPulmony"), sheeps);
+			this.addReport(t("inhabPulmony"), inhabitants);
+			this.addReport(t("sheepPulmony"), sheeps);
 			
 			return [inhabitants, sheeps];
 		} else {
@@ -195,7 +195,7 @@ exports.Town = function(town) {
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
-			this.addReport(tr("inhabHunger"), inhabitants);
+			this.addReport(t("inhabHunger"), inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -213,7 +213,7 @@ exports.Town = function(town) {
 			this.contents["structure"] -= structure;
 			this.posi("structure");
 			
-			this.reports.push(tr("slightContamination"));
+			this.reports.push(t("slightContamination"));
 			return [food, structure];
 		} else {
 			return [0, 0];
@@ -228,7 +228,7 @@ exports.Town = function(town) {
 			this.posi("inhabitants");
 			this.contents["deaths"] += inhabitants;
 			
-			this.addReport(tr("inhabContamination"), inhabitants);
+			this.addReport(t("inhabContamination"), inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -242,7 +242,7 @@ exports.Town = function(town) {
 			this.contents["inhabitants"] -= inhabitants;
 			this.posi("inhabitants");
 			
-			this.addReport(tr("inhabSafety"), inhabitants);
+			this.addReport(t("inhabSafety"), inhabitants);
 			return inhabitants;
 		} else {
 			return 0;
@@ -262,7 +262,7 @@ exports.Town = function(town) {
 			
 			this.contents["inhabitants"] += births;
 			this.contents["births"] += births;
-			this.addReport(tr("inhabBorn"), births);
+			this.addReport(t("inhabBorn"), births);
 			return births;
 		}
 		
@@ -284,7 +284,7 @@ exports.Town = function(town) {
 		}
 		
 		this.contents["sheeps"] += births;
-		this.addReport(tr("sheepBorn"), births);
+		this.addReport(t("sheepBorn"), births);
 		return births;
 	}
 	
@@ -304,10 +304,10 @@ exports.Town = function(town) {
 					this.contents["inhabitants"] += immigrants;
 					this.contents["immigrants"] += immigrants;
 					
-					this.addReport(tr("inhabCome"), immigrants);
+					this.addReport(t("inhabCome"), immigrants);
 					return immigrants;
 				} else {
-					this.addReport(tr("inhabKicked"));
+					this.addReport(t("inhabKicked"));
 					return 0;
 				}	
 			} else {
@@ -332,7 +332,7 @@ exports.Town = function(town) {
 	
 	this.finishReport = function() {
 		if (this.reports.length < 1) {
-			this.addReport(tr("timeFlowsAway"));
+			this.addReport(t("timeFlowsAway"));
 		}
 	}
 	
@@ -344,19 +344,19 @@ exports.Town = function(town) {
 	this.gameIsOver = function() {
 		//One or less inhabitants with no safety.
 		if ((this.contents["inhabitants"] <= 1) && (this.contents["safety"] < 50)) {
-			this.addReport(tr("gameOver0"));
+			this.addReport(t("gameOver0"));
 			this.contents["gameOver"] = 1;
 		}
 		
 		//100% garbage
 		if (this.contents["garbage"] >= 100) {
-			this.addReport(tr("gameOver1"));
+			this.addReport(t("gameOver1"));
 			this.contents["gameOver"] = 1;
 		}
 		
 		//52 weeks passed. Happy ending.
 		if ((this.contents["week"] >= 52) && (this.contents["gameOver"] == 0)) {
-			this.addReport(tr("happyEnd"));
+			this.addReport(t("happyEnd"));
 			this.contents["gameOver"] = 1;
 		}
 	}
@@ -368,7 +368,7 @@ exports.Town = function(town) {
 		
 		var result = [];
 		if (weeks == 1) {
-			this.addReport(tr(this.disasterList[this.contents["nextDisaster"]] + "Near"));
+			this.addReport(t(this.disasterList[this.contents["nextDisaster"]] + "Near"));
 		}
 		if (weeks == 0) {
 			switch (this.contents["nextDisaster"]) {
@@ -401,14 +401,14 @@ exports.Town = function(town) {
 			safety = 10;
 			this.contents["baseSafety"] -= safety;
 			this.posi(["safety"]);
-			this.addReport(tr("stormSafe"));
+			this.addReport(t("stormSafe"));
 			result = "safe";
 		} else {
 			this.contents["baseSafety"] = 0;
 			inhabitants = Math.round((this.contents["inhabitants"] / 10) + (Math.random() * 3));
 			structure = 20;
 			if (inhabitants > this.contents["inhabitants"]) inhabitants = this.contents["inhabitants"]; //ToDo: control this globally. Else, there would be more bodies than inhabitants. ^_^u
-			this.addReport(tr("stormFail"), inhabitants);
+			this.addReport(t("stormFail"), inhabitants);
 			result = "bad";
 		}
 		

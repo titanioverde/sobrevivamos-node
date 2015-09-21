@@ -12,7 +12,7 @@ var client = redis.createClient();
 var i18n = require("i18next");
 var i18n_options = require("./config/i18next.json");
 i18n.init(i18n_options);
-var tr = i18n.t;
+var t = i18n.t;
 
 //The game core
 var sobrevivamos = require("./sobrevivamos");
@@ -47,7 +47,7 @@ var isGuest = function(username) {
 
 //Converts a report array to a formatted string.
 var reportFromList = function(array, number) {
-	var result = tr("Week") + " " + number + " - ";
+	var result = t("Week") + " " + number + " - ";
 	for (var i in array) {
 		result = result + array[i] + " ";
 	}
@@ -126,7 +126,7 @@ var town_list = app.get("/town_list/:user", function(req, res) {
 				if (ownerID == sessionRead(req, res)) {
 					res.redirect("/new_town");
 				} else {
-					res.send(404, tr("userUnknown"));
+					res.send(404, t("userUnknown"));
 				}
 			}
 		}
@@ -236,7 +236,7 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 	var next_id;
 	var input = req.params.difficulty;
 	if (!(difficulties.hasOwnProperty(input))) {
-		res.send(404, tr("townTypeUnknown"));
+		res.send(404, t("townTypeUnknown"));
 	} else {
 		difficulty = difficulties[input];
 		difficulty = JSON.stringify(difficulty);
@@ -278,7 +278,7 @@ var sessionRead = function (req, res, callback) {
 
 //Signup form
 var signup_get = app.get("/signup", function(req, res) {
-	res.render("signup", {message: tr("pleaseRegister")});
+	res.render("signup", {message: t("pleaseRegister")});
 });
 
 //Signup process
@@ -289,8 +289,8 @@ var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 	} else {
 		if (body.fullName == "") body.fullName = body.username;
 		client.hexists("users:" + body.username, "password", function (err, user) {
-			if (err) { res.render("signup", {message: tr("dbError")}); }
-			if (user) { res.render("signup", {message: tr("existingUser")}); }
+			if (err) { res.render("signup", {message: t("dbError")}); }
+			if (user) { res.render("signup", {message: t("existingUser")}); }
 			else {
 				client.hmset("users:" + body.username, "password", body.password,
 							 "fullName", body.fullName, "email", body.email,
@@ -319,10 +319,10 @@ var login_post = app.post("/login", bodyParser(), function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	client.hexists("users:" + username, "password", function (err, user) {
-		if (err) { res.send(500, tr("loginError") + err); }
-		if (!user) { res.send(404, tr("userUnknown")); }
+		if (err) { res.send(500, t("loginError") + err); }
+		if (!user) { res.send(404, t("userUnknown")); }
 		client.hget("users:" + username, "password", function (err, pass) {
-			if (pass != password) { res.send(tr("wrongPassword")); }
+			if (pass != password) { res.send(t("wrongPassword")); }
 			else {
 				req.session.ownerID = username;
 				res.redirect("/town_list");
@@ -333,7 +333,7 @@ var login_post = app.post("/login", bodyParser(), function(req, res) {
 
 var logout = app.get("/logout", function(req, res) {
 	req.session.destroy(function() {
-		res.send(tr("loggedOut"));
+		res.send(t("loggedOut"));
 	});
 });
 
@@ -347,8 +347,8 @@ var profile_own = app.get("/profile", function(req, res) {
 var profile = app.get("/profile/:user", function(req, res) {
 	var username = req.params.user;
 	client.hexists("users:" + username, "password", function(err, result) {
-		if (err) { res.send(500, tr("profileError") + err); }
-		if (!result) { res.send(404, tr("userUnknown")); }
+		if (err) { res.send(500, t("profileError") + err); }
+		if (!result) { res.send(404, t("userUnknown")); }
 		client.hmget("users:" + username, "fullName", "bio", "location", "url", "lastTime", function(err, replies) {
 			res.render("profile", {profile: replies, username: username});
 		});
@@ -361,7 +361,7 @@ var first_page = app.get("/", function (req, res) {
 });
 
 var lang_test = app.get("/lang", function (req, res) {
-	res.send(tr("testring") + i18n.lng());
+	res.send(t("testring") + i18n.lng());
 });
 
 var lang_change = app.get("/lang/:lang", function (req, res) {

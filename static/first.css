@@ -5,9 +5,16 @@ body {
 	background-position-y: 50%;
 	color: white;
 	text-align: center;
+	text-shadow: 2px 2px black;
 	
 }
 
 a {
 	color: #DDDDDD;
+}
+
+#backcopyright {
+	font-style: italic;
+	font-size: x-small;
+	margin-top: 50px;
 }

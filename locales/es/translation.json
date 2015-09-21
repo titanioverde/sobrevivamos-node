@@ -41,6 +41,7 @@
 	"Butcher": "Matadero",
 	"allowForeigners": "Permitir forasteros",
 	"endTurn": "Fin del turno",
+	"background0": "Fondo: Horizonte Romántico Con Torre En Ruinas. (Thomas Cole)",
 	
 	"login": "Iniciar sesión",
 	"signup": "Registrar usuario",
@@ -60,6 +61,7 @@
 	"loginError": "Error de sesión: ",
 	"signupDone0": "¡Usuario registrado!",
 	"signupDone1": "Ya puedes iniciar sesión.",
+	"submitForm0": "Enviar",
 	
 	"mandatoryInfo": "Información obligatoria",
 	"fullName": "Nombre completo",

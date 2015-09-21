@@ -2,20 +2,20 @@ doctype html5
 html
 	head
 		title
-				!= t("title1")
+				= t("title1")
 				&nbsp;-&nbsp;
-				!= t("whoProfile", {user: profile[0]})
+				= t("whoProfile", {user: profile[0]})
 		
 	body
 		h3= t("whoProfile", {user: profile[0]})
 		p #{profile[1]}
 		p
-				!= t("Location")
+				= t("Location")
 				span :&nbsp;#{profile[2]}
 		p
 			a(href="#{profile[3]}") #{profile[3]}
 		p
-				!= t("lastTime")
+				= t("lastTime")
 				span :&nbsp;#{profile[4]}
 		
 		p

@@ -18,23 +18,23 @@ html
 		#controls
 			form(method="post")#mainForm
 				h5
-					!= t("Week")
+					= t("Week")
 					| &nbsp;
 					span#week 0
 				h5
-					!= t("Score")
+					= t("Score")
 					| &nbsp;
 					span#score ...
 				h6
-					!= t("Inhabitants")
+					= t("Inhabitants")
 					| &nbsp;
 					span#inhabitants 0
 				h6
-					!= t("Idles")
+					= t("Idles")
 					| &nbsp;
 					span#idles 0
 				h6
-					!= t("Sheeps")
+					= t("Sheeps")
 					| &nbsp;
 					span#sheeps 0
 					button(id="killSheep")= t("Butcher")
@@ -42,25 +42,25 @@ html
 				div
 					label= t("Gatherers")
 					input(type="number", name="gatherers", id="gatherers_control")
-					!= t("Food")
+					= t("Food")
 					| &nbsp;
 					span#food 0
 				div
 					label= t("Builders")
 					input(type="number", name="builders", id="builders_control")
-					!= t("Structure")
+					= t("Structure")
 					| &nbsp;
 					span#structure 0
 				div
 					label= t("Defenders")
 					input(type="number", name="defenders", id="defenders_control")
-					!= t("Safety")
+					= t("Safety")
 					| &nbsp;
 					span#safety 0
 				div
 					label= t("Cleaners")
 					input(type="number", name="cleaners", id="cleaners_control")
-					!= t("Garbage")
+					= t("Garbage")
 					| &nbsp;
 					span#garbage 0
 					| %

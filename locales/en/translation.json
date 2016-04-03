@@ -78,11 +78,11 @@
 	"didYouSignUp": "Did you sign up before?",
 	"profileError": "Profile error: ",
 	
-	"whoProfile": "__name__'s profile",
+	"whoProfile": "__user__'s profile",
 	"lastTime:": "Played last time",
 	"townList1": "Towns list",
 	
-	"whoTowns": "__name__'s towns",
+	"whoTowns": "__user__'s towns",
 	"viewProfile": "View profile",
 	"townUnknown": "This town never existed or does not exist anymore.",
 	"townTypeUnknown": "Town type unknown",

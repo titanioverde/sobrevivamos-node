@@ -12,6 +12,16 @@ span {
 	animation-duration: 2s;
 }
 
+input[type=number] {
+	margin-left: 6pt;
+	margin-right: 6pt;
+	width: 5em;
+}
+
+.row {
+	text-align: center;
+}
+
 .warning_success {
 	animation-name: success;
 }

@@ -44,6 +44,8 @@
 	"background0": "Background: Romantic Landscape with Ruined Tower. (Thomas Cole)",
 	
 	"login": "Log in",
+	"logout": "Log out",
+	"yourProfile": "Your profile",
 	"signup": "Sign up",
 	"pleaseRegister": "Please register.",
 	"townList": "List of your towns",

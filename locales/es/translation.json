@@ -44,6 +44,8 @@
 	"background0": "Fondo: Horizonte Romántico Con Torre En Ruinas. (Thomas Cole)",
 	
 	"login": "Iniciar sesión",
+	"logout": "Cerrar sesión",
+	"yourProfile": "Tu perfil",
 	"signup": "Registrar usuario",
 	"pleaseRegister": "Por favor, regístrate.",
 	"townList": "Listado de tus pueblos",

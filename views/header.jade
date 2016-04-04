@@ -1,0 +1,51 @@
+doctype html
+html
+	head
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		title= t("title1")
+		link(rel="stylesheet", href="default.css")
+		link(rel="stylesheet", href="bootstrap.min.css")
+		script(src="jquery.min.js")
+		script(src="bootstrap.min.js")
+		script(src="json.js")
+		
+	body
+		nav.navbar.navbar-default
+			.container-fluid
+				.navbar-header
+					button.navbar-toggle(type="button", data-toggle="collapse", data-target="#myNavbar")
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand(href="/")
+						= t("title1")
+				.collapse.navbar-collapse#myNavbar
+					ul.nav.navbar-nav
+						li
+							a(href="/new_town")
+								= t("newTown")
+						li 
+							a(href="/town_list")
+								= t("townList")
+								
+						if isGuest
+							li
+								a(href="/login")
+									= t("login")
+							li
+								a(href="/signup")
+									= t("signup")
+						else
+							li.dropdown
+								a.dropdown-toggle(data-toggle="dropdown", href="#")
+									= t("currentUser")
+									| : #{sessionID}
+									span.caret
+								ul.dropdown-menu
+									li
+										a(href="/profile/#{sessionID}")
+											= t("yourProfile")
+									li
+										a(href="/logout")
+											= t("logout")
+					

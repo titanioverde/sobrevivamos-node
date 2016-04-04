@@ -84,7 +84,7 @@ var controls = app.get("/controls_:town_id", function(req, res) {
 			if ((contents.owner) && (contents.owner != sessionID)) {
 				res.redirect("/view_" + req.params.town_id);
 			} else {
-				res.render("town-controls", {town_id: req.params.town_id});
+				res.render("town-controls", {town_id: req.params.town_id, sessionID: sessionID, isGuest: isGuest(sessionID)});
 			}
 		} else {
 			res.status(404);

@@ -1,80 +1,68 @@
-doctype html
-html
-
-	head
-		meta(name="viewport", content="width=device-width, initial-scale=1")
-		title= t("title1")
-		link(rel="stylesheet", href="default.css")
-		link(rel="stylesheet", href="bootstrap.min.css")
-		script(src="jquery.min.js")
-		script(src="bootstrap.min.js")
-		script(src="json.js")
+include ./header.jade
 		
-	body
-		.container-fluid
-				h1= t("title1")
-				h6.instructions
-					a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing")= t("booklet")
-				.tryAgain
-					p= t("gameOver")
-					p
-						a(href="/new_town")= t("tryAgain")
-				#controls
-					form(method="post")#mainForm
-						h5
-							= t("Week")
-							| &nbsp;
-							span#week 0
-						h5
-							= t("Score")
-							| &nbsp;
-							span#score ...
-						h6
-							= t("Inhabitants")
-							| &nbsp;
-							span#inhabitants 0
-						h6
-							= t("Idles")
-							| &nbsp;
-							span#idles 0
-						h6
-							= t("Sheeps")
-							| &nbsp;
-							span#sheeps 0
-							button(id="killSheep")= t("Butcher")
-							
-						.row
-								.col-sm-3
-										label= t("Gatherers")
-										input(type="number", name="gatherers", id="gatherers_control")
-										= t("Food")
-										| &nbsp;
-										span#food 0
-								.col-sm-3
-									label= t("Builders")
-									input(type="number", name="builders", id="builders_control")
-									= t("Structure")
-									| &nbsp;
-									span#structure 0
-								.col-sm-3
-									label= t("Defenders")
-									input(type="number", name="defenders", id="defenders_control")
-									= t("Safety")
-									| &nbsp;
-									span#safety 0
-								.col-sm-3
-									label= t("Cleaners")
-									input(type="number", name="cleaners", id="cleaners_control")
-									= t("Garbage")
-									| &nbsp;
-									span#garbage 0
-									| %
-						.row
-								.col-sm-6
-									label= t("allowForeigners")
-									input(type="checkbox", name="allowForeigners", id="allowForeigners_control")
-								input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
-								button(id="next_week")= t("endTurn")
-						
-				#reports
+.container
+		h6.instructions
+			a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing")= t("booklet")
+		.tryAgain
+			p= t("gameOver")
+			p
+				a(href="/new_town")= t("tryAgain")
+		#controls
+			form(method="post")#mainForm
+				h5
+					= t("Week")
+					| &nbsp;
+					span#week 0
+				h5
+					= t("Score")
+					| &nbsp;
+					span#score ...
+				h6
+					= t("Inhabitants")
+					| &nbsp;
+					span#inhabitants 0
+				h6
+					= t("Idles")
+					| &nbsp;
+					span#idles 0
+				h6
+					= t("Sheeps")
+					| &nbsp;
+					span#sheeps 0
+					button(id="killSheep")= t("Butcher")
 					
+				.row
+						.col-sm-3
+								label= t("Gatherers")
+								input(type="number", name="gatherers", id="gatherers_control")
+								= t("Food")
+								| &nbsp;
+								span#food 0
+						.col-sm-3
+							label= t("Builders")
+							input(type="number", name="builders", id="builders_control")
+							= t("Structure")
+							| &nbsp;
+							span#structure 0
+						.col-sm-3
+							label= t("Defenders")
+							input(type="number", name="defenders", id="defenders_control")
+							= t("Safety")
+							| &nbsp;
+							span#safety 0
+						.col-sm-3
+							label= t("Cleaners")
+							input(type="number", name="cleaners", id="cleaners_control")
+							= t("Garbage")
+							| &nbsp;
+							span#garbage 0
+							| %
+				.row
+						.col-sm-6
+							label= t("allowForeigners")
+							input(type="checkbox", name="allowForeigners", id="allowForeigners_control")
+						input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
+						button(id="next_week")= t("endTurn")
+				
+		#reports
+			

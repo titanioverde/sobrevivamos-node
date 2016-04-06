@@ -116,5 +116,10 @@
 	"burglar": "burglar",
 	"wolf": "wolf pack",
 	
+	"gatherersTip": "+6 Food per week and Gatherer.\n\nAny other kind of worker needs 3 Food per week.\nThere is a performance bonus for more than 10 Gatherers.",
+	"buildersTip": "+2 Structure per week and Builder.\n\nEvery Inhabitant needs 6 Structure.\nEvery Sheep needs 1 Structure.",
+	"defendersTip": "+1 Safety per week and Defender.\n+5 Extra Safety for every Defender in place.\n\nStructure also sums a little Safety.",
+	"cleanersTip": "-7% Garbage per week and Cleaner.\n\nEvery other Inhabitant produces until 3% Garbage per week.",
+	
 	"testring": "Check!"
 }

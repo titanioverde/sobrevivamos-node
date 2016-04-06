@@ -35,24 +35,32 @@ include ./header.jade
 						.col-sm-3
 								label= t("Gatherers")
 								input(type="number", name="gatherers", id="gatherers_control")
+								a(href="#", data-toggle="popover", data-content=t("gatherersTip"), data-trigger="focus")
+										span.glyphicon.glyphicon-question-sign
 								= t("Food")
 								| &nbsp;
 								span#food 0
 						.col-sm-3
 							label= t("Builders")
 							input(type="number", name="builders", id="builders_control")
+							a(href="#", data-toggle="popover", data-content=t("buildersTip"), data-trigger="focus")
+								span.glyphicon.glyphicon-question-sign
 							= t("Structure")
 							| &nbsp;
 							span#structure 0
 						.col-sm-3
 							label= t("Defenders")
 							input(type="number", name="defenders", id="defenders_control")
+							a(href="#", data-toggle="popover", data-content=t("defendersTip"), data-trigger="focus")
+								span.glyphicon.glyphicon-question-sign
 							= t("Safety")
 							| &nbsp;
 							span#safety 0
 						.col-sm-3
 							label= t("Cleaners")
 							input(type="number", name="cleaners", id="cleaners_control")
+							a(href="#", data-toggle="popover", data-content=t("cleanersTip"), data-trigger="focus")
+								span.glyphicon.glyphicon-question-sign
 							= t("Garbage")
 							| &nbsp;
 							span#garbage 0

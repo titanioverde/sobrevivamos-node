@@ -152,5 +152,6 @@ $(document).ready(function() {
 	$("button#next_week").off("click").on("click", function(event) { event.preventDefault(); refreshIdles(town); nextWeek(); });
 	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); });
 	$("input[type=number]").on("change", function(event) { refreshIdles(town); }).on("keyup", function(event) { refreshIdles(town) });
+	$('[data-toggle="popover"]').popover();
 
 });

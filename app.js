@@ -41,6 +41,7 @@ var difficulties = {
 }
 
 var isGuest = function(username) {
+	console.log(username);
 	return /s{1}\d{7}/.test(username);
 }
 
@@ -95,13 +96,14 @@ var controls = app.get("/controls_:town_id", function(req, res) {
 
 //Read-only information about a town.
 var view = app.get("/view_:town_id", function(req, res) {
+	var sessionID = sessionRead(req, res);
 	var result = client.get("towns:" + req.params.town_id, function(err, replies) {
 		if (thisTownExists(replies)) {
 			var contents = JSON.parse(replies);
-			res.render("town-readonly", {contents: contents});
+			res.render("town-readonly", {contents: contents, sessionID: sessionID, isGuest: isGuest(sessionID)});
 		} else {
 			res.status(404);
-			res.render("town-non-existent");
+			res.render("town-non-existent", {sessionID: sessionID, isGuest: isGuest(sessionID)});
 		}
 	});
 });
@@ -115,13 +117,14 @@ var town_list_own = app.get("/town_list", function(req, res) {
 //List of towns owned by this user.
 var town_list = app.get("/town_list/:user", function(req, res) {
 	var ownerID = req.params.user;
+	var sessionID = sessionRead(req, res);
 	var list = client.smembers("ownedBy:" + ownerID, function(err, replies) {
 		if (err) {
 			res.send(err);
 		} else {
 			if (replies.length > 0) {
 				var guest = isGuest(ownerID);
-				res.render("town-list", {towns: replies, ownerID: ownerID, guest: guest});
+				res.render("town-list", {towns: replies, ownerID: ownerID, guest: guest, sessionID: sessionID, isGuest: isGuest(sessionID)});
 			} else {
 				if (ownerID == sessionRead(req, res)) {
 					res.redirect("/new_town");
@@ -226,8 +229,9 @@ var calculateScore = app.get("/calculateScore/:town_id", function(req, res) {
 });
 
 var new_town_own = app.get("/new_town", function(req, res) {
+	var sessionID = sessionRead(req, res);
 	var dif_list = Object.keys(difficulties);
-	res.render("new-town", {dif_list: dif_list, difficulties: difficulties});
+	res.render("new-town", {dif_list: dif_list, difficulties: difficulties, sessionID: sessionID, isGuest: isGuest(sessionID)});
 });
 
 //Generate a new Redis "towns:" string with initial values.
@@ -249,7 +253,7 @@ var new_town = app.get("/new_town/:difficulty", function(req, res) {
 				else {
 					var new_id = client.set("next_id", parseInt(next_id) + 1);
 					client.sadd("ownedBy:" + sessionID, next_id);
-					res.render("town-generated", {next_id: next_id});
+					res.render("town-generated", {next_id: next_id, sessionID: sessionID, isGuest: isGuest(sessionID)});
 				}
 			});
 		});
@@ -263,6 +267,7 @@ var hasSpace = function (text) {
 
 //Provisional sessions
 var sessionRead = function (req, res, callback) {
+	console.log(req.session.ownerID);
 	var ownerID = 0;	
 	if (!(req.session.ownerID)) {
 		ownerID = "s" + Math.round((Math.random() * 9000000) + 1000000);
@@ -278,19 +283,21 @@ var sessionRead = function (req, res, callback) {
 
 //Signup form
 var signup_get = app.get("/signup", function(req, res) {
-	res.render("signup", {message: t("pleaseRegister")});
+	var sessionID = sessionRead(req, res);
+	res.render("signup", {message: t("pleaseRegister"), sessionID: sessionID, isGuest: isGuest(sessionID)});
 });
 
 //Signup process
 var signup_post = app.post("/signup", bodyParser(), function(req, res) {
+	var sessionID = sessionRead(req, res);
 	var body = req.body;
 	if (hasSpace(body.username)) {
-		res.render("signup", {message: "noSpaces"});
+		res.render("signup", {message: t("noSpaces"), sessionID: sessionID, isGuest: isGuest(sessionID)});
 	} else {
 		if (body.fullName == "") body.fullName = body.username;
 		client.hexists("users:" + body.username, "password", function (err, user) {
-			if (err) { res.render("signup", {message: t("dbError")}); }
-			if (user) { res.render("signup", {message: t("existingUser")}); }
+			if (err) { res.render("signup", {message: t("dbError"), sessionID: sessionID, isGuest: isGuest(sessionID)}); }
+			if (user) { res.render("signup", {message: t("existingUser"), sessionID: sessionID, isGuest: isGuest(sessionID)}); }
 			else {
 				client.hmset("users:" + body.username, "password", body.password,
 							 "fullName", body.fullName, "email", body.email,
@@ -299,7 +306,7 @@ var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 					if (err) {
 						res.send(500, err);
 					} else {
-						res.render("signup-done");
+						res.render("signup-done", {sessionID: sessionID, isGuest: isGuest(sessionID)});
 					}
 				});
 			}
@@ -309,9 +316,8 @@ var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 
 //Login form
 var login_get = app.get("/login", function(req, res) {
-	sessionRead(req, res, function() {
-		res.render("login", {username: req.session.ownerID});
-	});	
+	var sessionID = sessionRead(req, res);
+	res.render("login", {username: req.session.ownerID, sessionID: sessionID, isGuest: isGuest(sessionID)});
 });
 
 //Login process
@@ -345,12 +351,13 @@ var profile_own = app.get("/profile", function(req, res) {
 
 //Nice properties, towns and scores from any registered user.
 var profile = app.get("/profile/:user", function(req, res) {
+	var sessionID = sessionRead(req, res);
 	var username = req.params.user;
 	client.hexists("users:" + username, "password", function(err, result) {
 		if (err) { res.send(500, t("profileError") + err); }
 		if (!result) { res.send(404, t("userUnknown")); }
 		client.hmget("users:" + username, "fullName", "bio", "location", "url", "lastTime", function(err, replies) {
-			res.render("profile", {profile: replies, username: username});
+			res.render("profile", {profile: replies, username: username, sessionID: sessionID, isGuest: isGuest(sessionID)});
 		});
 	});
 });

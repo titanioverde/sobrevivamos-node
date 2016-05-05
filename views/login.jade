@@ -1,13 +1,6 @@
-doctype html
-html
-
-	head
-		title
-				= t("title1")
-				&nbsp;-&nbsp;
-				= t("login")
-	
-	body
+include ./header.jade
+		
+#container.container
 		h1= t("login")
 		p= t("currentUser")
 			span :&nbsp;#{username}

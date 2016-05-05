@@ -1,14 +1,6 @@
-doctype html
-html
-
-	head
-		title
-				= t("title1")
-				&nbsp;-&nbsp;
-				= t("newTown")
-		link(rel="stylesheet", href="default.css")
-	
-	body
+include ./header.jade
+		
+#container.container
 		h3= t("townType")
 		ul
 			for dif in dif_list

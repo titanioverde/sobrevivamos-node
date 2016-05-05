@@ -1,12 +1,6 @@
-doctype html
-html
-	head
-		title
-				= t("title1")
-				&nbsp;-&nbsp;
-				= t("townList1")
-	
-	body
+include ./header.jade
+		
+#container.container
 		h3= t("whoTowns", {user: ownerID})
 		ul
 			for town in towns

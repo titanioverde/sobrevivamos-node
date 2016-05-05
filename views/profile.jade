@@ -1,21 +1,15 @@
-doctype html5
-html
-	head
-		title
-				= t("title1")
-				&nbsp;-&nbsp;
-				= t("whoProfile", {user: profile[0]})
+include ./header.jade
 		
-	body
+#container.container
 		h3= t("whoProfile", {user: profile[0]})
 		p #{profile[1]}
 		p
-				= t("Location")
+				=t("Location")
 				span :&nbsp;#{profile[2]}
 		p
 			a(href="#{profile[3]}") #{profile[3]}
 		p
-				= t("lastTime")
+				=t("LastTime")
 				span :&nbsp;#{profile[4]}
 		
 		p

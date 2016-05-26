@@ -37,48 +37,74 @@ script(src="/json.js")
 									= t("Sheeps")
 									| &nbsp;
 									span#sheeps 0
+									br
 									button(id="killSheep")= t("Butcher")
 					
 				.row
-						.col-sm-3
-							label= t("Gatherers")
-							input(type="number", name="gatherers", id="gatherers_control")
-							a(href="#", data-toggle="popover", title=t("Gatherers"), data-content=t("gatherersTip"), data-trigger="focus", data-placement="top")
-								span.glyphicon.glyphicon-question-sign
-							= t("Food")
-							| &nbsp;
-							span#food 0
-						.col-sm-3
-							label= t("Builders")
-							input(type="number", name="builders", id="builders_control")
-							a(href="#", data-toggle="popover", title=t("Builders"), data-content=t("buildersTip"), data-trigger="focus", data-placement="top")
-								span.glyphicon.glyphicon-question-sign
-							= t("Structure")
-							| &nbsp;
-							span#structure 0
-						.col-sm-3
-							label= t("Defenders")
-							input(type="number", name="defenders", id="defenders_control")
-							a(href="#", data-toggle="popover", title=t("Defenders"), data-content=t("defendersTip"), data-trigger="focus", data-placement="top")
-								span.glyphicon.glyphicon-question-sign
-							= t("Safety")
-							| &nbsp;
-							span#safety 0
-						.col-sm-3
-							label= t("Cleaners")
-							input(type="number", name="cleaners", id="cleaners_control")
-							a(href="#", data-toggle="popover", title=t("Cleaners"), data-content=t("cleanersTip"), data-trigger="focus", data-placement="top")
-								span.glyphicon.glyphicon-question-sign
-							= t("Garbage")
-							| &nbsp;
-							span#garbage 0
-							| %
+						.col-md-3
+								table.controls
+										tr
+												td.labels
+														label.controls= t("Gatherers")
+												td.inputs
+														p.inputs
+																input(type="number", name="gatherers", id="gatherers_control")
+																a(href="#", data-toggle="popover", data-content=t("gatherersTip"), data-trigger="focus", data-placement="top")
+																		span.glyphicon.glyphicon-question-sign
+														p.counters
+																= t("Food")
+																| &nbsp;
+																span#food 0
+						.col-md-3
+								table.controls
+										tr
+												td.labels
+														label.controls= t("Builders")
+												td.inputs
+														p.inputs
+																input(type="number", name="builders", id="builders_control")
+																a(href="#", data-toggle="popover", data-content=t("buildersTip"), data-trigger="focus", data-placement="top")
+																		span.glyphicon.glyphicon-question-sign
+														p.counters
+																= t("Structure")
+																| &nbsp;
+																span#structure 0
+						.col-md-3
+								table.controls
+										tr
+												td.labels
+														label.controls= t("Defenders")
+												td.inputs
+														p.inputs
+																input(type="number", name="defenders", id="defenders_control")
+																a(href="#", data-toggle="popover", data-content=t("defendersTip"), data-trigger="focus", data-placement="top")
+																		span.glyphicon.glyphicon-question-sign
+														p.counters
+																= t("Safety")
+																| &nbsp;
+																span#safety 0
+						.col-md-3
+								table.controls
+										tr
+												td.labels
+														label.controls= t("Cleaners")
+												td.inputs
+														p.inputs
+																input(type="number", name="cleaners", id="cleaners_control")
+																a(href="#", data-toggle="popover", data-content=t("cleanersTip"), data-trigger="focus", data-placement="top")
+																		span.glyphicon.glyphicon-question-sign
+														p.counters
+																= t("Garbage")
+																| &nbsp;
+																span#garbage 0
+																| %
 				.row
 						.col-sm-6
 							label= t("allowForeigners")
 							input(type="checkbox", name="allowForeigners", id="allowForeigners_control")
-						input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
-						button(id="next_week")= t("endTurn")
+						.col-sm-6
+								input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
+								button(id="next_week")= t("endTurn")
 				
 		#reports
 			

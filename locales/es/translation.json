@@ -116,10 +116,10 @@
 	"burglar": "ratero",
 	"wolf": "manada de lobos",
 	
-	"gatherersTip": "+6 Alimento por semana y Recolector.\n\nEl resto de trabajadores necesitan 3 Alimento por semana.\nHay un bonus de rendimiento para más de 10 Recolectores.",
-	"buildersTip": "+2 Estructura por semana y Constructor.\n\nCada Habitante necesita 6 Estructura.\nCada Oveja necesita 1 Estructura.",
-	"defendersTip": "+1 Seguridad por semana y Defensor.\n+5 Seguridad Extra por cada Defensor en su puesto.\n\nLa Estructura también suma un poco de Seguridad.",
-	"cleanersTip": "-7% Residuos por semana y Limpiador.\n\nCada Habitante del resto de oficios producen hasta un 3% de Residuos por semana.",
+	"gatherersTip": "+6 Alimento por semana y Recolector.",
+	"buildersTip": "+2 Estructura por semana y Constructor.",
+	"defendersTip": "+1 Seguridad por semana y Defensor.",
+	"cleanersTip": "-7% Residuos por semana y Limpiador.",
 	
 	"testring": "Probando"
 }

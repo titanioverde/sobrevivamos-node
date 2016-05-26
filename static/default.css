@@ -35,3 +35,32 @@ input[type=number] {
 	color: white;
 	display: none;
 }
+
+table.controls {
+	width: 100%;
+}
+
+td.labels {
+	width: 50%;
+	vertical-align: top;
+	text-align: right;
+	border-width: 4px;
+	border-color: white;
+	border-style: solid;
+}
+
+td.inputs {
+	width: 50%;
+	text-align: left;
+	border-width: 4px;
+	border-color: white;
+	border-style: solid;
+}
+
+p.counters {
+	margin-left: 6pt;
+}
+
+label.controls {
+	font-size: 140%;
+}

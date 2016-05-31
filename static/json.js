@@ -153,5 +153,13 @@ $(document).ready(function() {
 	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); });
 	$("input[type=number]").on("change", function(event) { refreshIdles(town); }).on("keyup", function(event) { refreshIdles(town) });
 	$('[data-toggle="popover"]').popover();
+	
+	$("input[type='number']").TouchSpin({
+		min: 0,
+		max: 100,
+		step: 1,
+		decimals: 0,
+		maxboostedstep: 1
+	});
 
 });

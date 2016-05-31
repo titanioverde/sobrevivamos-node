@@ -1,6 +1,9 @@
 include ./header.jade
 
+link(rel="stylesheet", href="/jquery.bootstrap-touchspin.min.css")
+script(src="/jquery.bootstrap-touchspin.min.js")
 script(src="/json.js")
+
 		
 #container.container
 		h6.instructions
@@ -12,92 +15,100 @@ script(src="/json.js")
 		#controls
 			form(method="post")#mainForm
 				.row
-						.col-sm-3
+						.col-md-2
+				
+						
 								h5
 									= t("Week")
 									| &nbsp;
 									span#week 0
-						.col-sm-3
+						
 								h5
 									= t("Score")
 									| &nbsp;
 									span#score ...
-						.col-sm-2
+						
 								h6
 									= t("Inhabitants")
 									| &nbsp;
 									span#inhabitants 0
-						.col-sm-2
+						
 								h6
 									= t("Idles")
 									| &nbsp;
 									span#idles 0
-						.col-sm-2
+						
 								h6
 									= t("Sheeps")
 									| &nbsp;
 									span#sheeps 0
 									br
 									button(id="killSheep")= t("Butcher")
-					
-				.row
-						.col-md-3
-								table.controls
-										tr
-												td.labels
-														label.controls= t("Gatherers")
-												td.inputs
-														p.inputs
-																input(type="number", name="gatherers", id="gatherers_control")
-																a(href="#", data-toggle="popover", data-content=t("gatherersTip"), data-trigger="focus", data-placement="top")
-																		span.glyphicon.glyphicon-question-sign
-														p.counters
-																= t("Food")
-																| &nbsp;
-																span#food 0
-						.col-md-3
-								table.controls
-										tr
-												td.labels
-														label.controls= t("Builders")
-												td.inputs
-														p.inputs
-																input(type="number", name="builders", id="builders_control")
-																a(href="#", data-toggle="popover", data-content=t("buildersTip"), data-trigger="focus", data-placement="top")
-																		span.glyphicon.glyphicon-question-sign
-														p.counters
-																= t("Structure")
-																| &nbsp;
-																span#structure 0
-						.col-md-3
-								table.controls
-										tr
-												td.labels
-														label.controls= t("Defenders")
-												td.inputs
-														p.inputs
-																input(type="number", name="defenders", id="defenders_control")
-																a(href="#", data-toggle="popover", data-content=t("defendersTip"), data-trigger="focus", data-placement="top")
-																		span.glyphicon.glyphicon-question-sign
-														p.counters
-																= t("Safety")
-																| &nbsp;
-																span#safety 0
-						.col-md-3
-								table.controls
-										tr
-												td.labels
-														label.controls= t("Cleaners")
-												td.inputs
-														p.inputs
-																input(type="number", name="cleaners", id="cleaners_control")
-																a(href="#", data-toggle="popover", data-content=t("cleanersTip"), data-trigger="focus", data-placement="top")
-																		span.glyphicon.glyphicon-question-sign
-														p.counters
-																= t("Garbage")
-																| &nbsp;
-																span#garbage 0
-																| %
+						.col-md-10
+								.row
+										.col-sm-6
+												table.controls
+														tr
+																td.labels
+																		label.controls= t("Gatherers")
+																td.inputs
+																		p.inputs
+																				input(type="number", name="gatherers", id="gatherers_control", class="input-lg")
+																				a(href="#", data-toggle="popover", data-content=t("gatherersTip"), data-trigger="focus", data-placement="top")
+																						span.glyphicon.glyphicon-question-sign
+																		p.counters
+																				= t("Food")
+																				| &nbsp;
+																				span#food 0
+																td.emptiness
+																
+										.col-sm-6
+												table.controls
+														tr
+																td.labels
+																		label.controls= t("Builders")
+																td.inputs
+																		p.inputs
+																				input(type="number", name="builders", id="builders_control", class="input-lg")
+																				a(href="#", data-toggle="popover", data-content=t("buildersTip"), data-trigger="focus", data-placement="top")
+																						span.glyphicon.glyphicon-question-sign
+																		p.counters
+																				= t("Structure")
+																				| &nbsp;
+																				span#structure 0
+																td.emptiness
+								.row
+										.col-sm-6
+												table.controls
+														tr
+																td.labels
+																		label.controls= t("Defenders")
+																td.inputs
+																		p.inputs
+																				input(type="number", name="defenders", id="defenders_control", class="input-lg")
+																				a(href="#", data-toggle="popover", data-content=t("defendersTip"), data-trigger="focus", data-placement="top")
+																						span.glyphicon.glyphicon-question-sign
+																		p.counters
+																				= t("Safety")
+																				| &nbsp;
+																				span#safety 0
+																td.emptiness
+										.col-sm-6
+												table.controls
+														tr
+																td.labels
+																		label.controls= t("Cleaners")
+																td.inputs
+																		p.inputs
+																				input(type="number", name="cleaners", id="cleaners_control", class="input-lg")
+																				a(href="#", data-toggle="popover", data-content=t("cleanersTip"), data-trigger="focus", data-placement="top")
+																						span.glyphicon.glyphicon-question-sign
+																		p.counters
+																				= t("Garbage")
+																				| &nbsp;
+																				span#garbage 0
+																				| %
+																td.emptiness
 				.row
 						.col-sm-6
 							label= t("allowForeigners")

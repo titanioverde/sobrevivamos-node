@@ -153,6 +153,7 @@ $(document).ready(function() {
 	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); });
 	$("input[type=number]").on("change", function(event) { refreshIdles(town); }).on("keyup", function(event) { refreshIdles(town) });
 	$('[data-toggle="popover"]').popover();
+	$("div#reports-expand").off("click").on("click", function(event) { event.preventDefault(); $("div#reports-frame").toggleClass("reports-small").toggleClass("reports-expanded"); });
 	
 	$("input[type='number']").TouchSpin({
 		min: 0,

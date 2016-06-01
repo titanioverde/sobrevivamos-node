@@ -141,9 +141,9 @@ var get_json = app.get("/get_json/:town_id", function(req, res) {
 	var result = client.get("towns:" + req.params.town_id, function (err, replies) {
 		if (thisTownExists(replies)) {
 			var contents = JSON.parse(replies);
-			var result2 = client.lrange("town" + req.params.town_id, 0, 2, function (err, replies) {
+			var result2 = client.lrange("town" + req.params.town_id, 0, 4, function (err, replies) {
 				var reports = replies;
-				client.ltrim("town" + req.params.town_id, 0, 2);
+				client.ltrim("town" + req.params.town_id, 0, 4);
 				var town = {"contents": contents, "reports": reports};
 				res.json(town);
 			});

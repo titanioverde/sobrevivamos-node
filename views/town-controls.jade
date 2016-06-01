@@ -12,6 +12,9 @@ script(src="/json.js")
 			p= t("gameOver")
 			p
 				a(href="/new_town")= t("tryAgain")
+		#reports-frame.reports-small
+				div#reports-expand.glyphicon.glyphicon-resize-full
+				p#reports
 		#controls
 			form(method="post")#mainForm
 				.row
@@ -117,5 +120,5 @@ script(src="/json.js")
 								input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
 								button(id="next_week")= t("endTurn")
 				
-		#reports
+		
 			

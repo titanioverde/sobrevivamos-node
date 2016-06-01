@@ -73,3 +73,29 @@ label.controls {
 	font-size: 125%;
 	margin-right: 10pt;
 }
+
+div#reports-frame {
+	border-style: dashed;
+	border-width: 2px;
+	border-color: yellow;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	position: relative;
+}
+
+div#reports-expand {
+	padding: 2px 2px 2px 2px;
+	border: solid 1px gray;
+	position: absolute;
+	right: 0%;
+	top: 0%;
+	cursor: sw-resize
+}
+
+.reports-small {
+	height: 2em;
+}
+
+.reports-expanded {
+	height: 8em;
+}

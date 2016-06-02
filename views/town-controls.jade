@@ -21,35 +21,35 @@ script(src="/json.js")
 						.col-md-2
 				
 						
-								h5
+								h3
 									= t("Week")
 									| &nbsp;
 									span#week 0
 						
-								h5
+								h4
 									= t("Score")
 									| &nbsp;
 									span#score ...
 						
-								h6
+								h5
 									= t("Inhabitants")
 									| &nbsp;
 									span#inhabitants 0
 						
-								h6
+								h5
 									= t("Idles")
 									| &nbsp;
 									span#idles 0
 						
-								h6
+								h5
 									= t("Sheeps")
 									| &nbsp;
 									span#sheeps 0
 									br
-									button(id="killSheep")= t("Butcher")
+									button(id="killSheep", class="btn btn-danger btn-xs")= t("Butcher")
 						.col-md-10
 								.row
-										.col-sm-6
+										.col-md-6
 												table.controls
 														tr
 																td.labels
@@ -65,7 +65,7 @@ script(src="/json.js")
 																				span#food 0
 																td.emptiness
 																
-										.col-sm-6
+										.col-md-6
 												table.controls
 														tr
 																td.labels
@@ -81,7 +81,7 @@ script(src="/json.js")
 																				span#structure 0
 																td.emptiness
 								.row
-										.col-sm-6
+										.col-md-6
 												table.controls
 														tr
 																td.labels
@@ -96,7 +96,7 @@ script(src="/json.js")
 																				| &nbsp;
 																				span#safety 0
 																td.emptiness
-										.col-sm-6
+										.col-md-6
 												table.controls
 														tr
 																td.labels
@@ -112,13 +112,16 @@ script(src="/json.js")
 																				span#garbage 0
 																				| %
 																td.emptiness
-				.row
-						.col-sm-6
-							label= t("allowForeigners")
-							input(type="checkbox", name="allowForeigners", id="allowForeigners_control")
-						.col-sm-6
-								input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
-								button(id="next_week")= t("endTurn")
+								.row
+										.col-md-6
+												.checkbox.final-controls
+														label
+																input(type="checkbox", name="allowForeigners", id="allowForeigners_control")
+																= t("allowForeigners")
+										.col-md-6.final-controls
+												.final-controls
+														input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
+														button(id="next_week", class="btn btn-success")= t("endTurn")
 				
 		
 			

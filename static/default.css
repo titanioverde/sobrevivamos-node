@@ -8,6 +8,16 @@
 	to { color: black; }
 }
 
+@keyframes expand {
+	from { height: 2em; }
+	to { height: 8em; }
+}
+
+@keyframes collapse {
+	from { height: 8em; }
+	to { height: 2em; }
+}
+
 input[type=number] {
 	-moz-appearance: textfield;
 	-webkit-appearance: none;
@@ -15,6 +25,10 @@ input[type=number] {
 
 span {
 	animation-duration: 2s;
+}
+
+#reports-frame {
+	animation-duration: 1s;
 }
 
 .row {
@@ -27,6 +41,14 @@ span {
 
 .warning_fail {
 	animation-name: fail;
+}
+
+.reports-expanding {
+	animation-name: expand;
+}
+
+.reports-collapsing {
+	animation-name: collapse;
 }
 
 .tryAgain {
@@ -98,4 +120,9 @@ div#reports-expand {
 
 .reports-expanded {
 	height: 8em;
+}
+
+.final-controls {
+	text-align: right;
+	padding-right: 30pt;
 }

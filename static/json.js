@@ -153,7 +153,17 @@ $(document).ready(function() {
 	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); });
 	$("input[type=number]").on("change", function(event) { refreshIdles(town); }).on("keyup", function(event) { refreshIdles(town) });
 	$('[data-toggle="popover"]').popover();
-	$("div#reports-expand").off("click").on("click", function(event) { event.preventDefault(); $("div#reports-frame").toggleClass("reports-small").toggleClass("reports-expanded"); });
+	$("div#reports-expand").off("click").on("click", function(event) {
+		event.preventDefault();
+		if ($("div#reports-frame").hasClass("reports-expanding")) {
+			$("div#reports-frame").removeClass("reports-expanding").removeClass("reports-expanded").addClass("reports-collapsing").addClass("reports-small");
+			$("div#reports-expand").removeClass("glyphicon-resize-small").addClass("glyphicon-resize-full");
+		} else {
+			$("div#reports-frame").removeClass("reports-collapsing").removeClass("reports-small").addClass("reports-expanding").addClass("reports-expanded");
+			$("div#reports-expand").removeClass("glyphicon-resize-full").addClass("glyphicon-resize-small");
+		}
+		
+	});
 	
 	$("input[type='number']").TouchSpin({
 		min: 0,

@@ -109,8 +109,8 @@ function killSheep() {
 			data: "town_id=" + town_id,
 			type: "get",
 			beforeSend: function(data) {
-				$("button#killSheep").attr("disabled", "true");
-				$("input#next_week").attr("disabled", "true");
+				$("button#killSheep").attr("disabled", "disabled").addClass("active");
+				$("input#next_week").attr("disabled", "disabled").addClass("active");
 			},
 			success: function(data) {
 				var output = data;
@@ -120,8 +120,8 @@ function killSheep() {
 					} else {
 						$("span#sheeps").addClass("warning_fail");
 					}
-					$("button#killSheep").removeAttr("disabled");
-					$("input#next_week").removeAttr("disabled");
+					$("button#killSheep").removeAttr("disabled").removeClass("active");
+					$("input#next_week").removeAttr("disabled").removeClass("active");
 	
 				});
 			}

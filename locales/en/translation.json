@@ -116,10 +116,10 @@
 	"burglar": "burglar",
 	"wolf": "wolf pack",
 	
-	"gatherersTip": "+6 Food per week and Gatherer.",
-	"buildersTip": "+2 Structure per week and Builder.",
-	"defendersTip": "+1 Safety per week and Defender.",
-	"cleanersTip": "-7% Garbage per week and Cleaner.",
+	"gatherersTip": "+6 Food per week and Gatherer. -3 per Worker. -2 per Idle.",
+	"buildersTip": "+2 Structure per week and Builder. 6 needed per Inhabitant. 1 needed per Sheep.",
+	"defendersTip": "+1 Safety per week and Defender. 5 extra Safety per current Defender.",
+	"cleanersTip": "-7% Garbage per week and Cleaner. +3% or less per Worker and Sheep.",
 	
 	"testring": "Check!"
 }

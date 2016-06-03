@@ -15,13 +15,13 @@ function refreshForm(town) {
 		target = "input[name=" + job_name + "]";
 		$(target)[0].value = town[job_name] | 0;
 		$(target)[0].min = 0;
-		$(target)[0].max = town["inhabitants"];
 	}
 	if (town["allowForeigners"]) {
 		$("input[name=allowForeigners]").prop("checked", true);
 	} else {
 		$("input[name=allowForeigners]").prop("checked", false);
 	}
+	$("input[type=number]").trigger("touchspin.updatesettings", { max: town["inhabitants"] });
 }
 
 //Show current values. Grabbed from town local object
@@ -148,7 +148,6 @@ function getJSON(callback) {
 
 
 $(document).ready(function() {
-	getJSON();
 	$("button#next_week").off("click").on("click", function(event) { event.preventDefault(); refreshIdles(town); nextWeek(); });
 	$("button#killSheep").off("click").on("click", function(event) { event.preventDefault(); killSheep(); });
 	$("input[type=number]").on("change", function(event) { refreshIdles(town); }).on("keyup", function(event) { refreshIdles(town) });
@@ -172,5 +171,7 @@ $(document).ready(function() {
 		decimals: 0,
 		maxboostedstep: 1
 	});
+	
+	getJSON();
 
 });

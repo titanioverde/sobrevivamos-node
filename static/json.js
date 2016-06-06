@@ -88,6 +88,8 @@ function nextWeek() {
 			},
 			beforeSend: function() {
 				$("input#next_week").attr("disabled", "true");
+				$("div#cover-animation").show().addClass("start-timeflows");
+				setTimeout(function() { $("div#cover-animation").removeClass("start-timeflows").hide(); }, 5000);
 			},
 			success: function() {
 				getJSON($("input#next_week").removeAttr("disabled"));

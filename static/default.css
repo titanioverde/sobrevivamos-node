@@ -136,15 +136,15 @@ div#cover-animation {
 	height: 100%;
 	display: none;
 	z-index: 100;
-	animation-duration: 5s;
+	animation-duration: 4s;
 }
 
 @keyframes timeflows {
 	0% { opacity: 0; }
-	20% { opacity: 0.25; background-color: cyan; }
-	40% { opacity: 0.5; background-color: orange; }
-	60% { opacity: 0.75; background-color: navy; }
-	80% { opacity: 0.4; background-color: teal; }
+	/*20% { opacity: 0.25; background-color: cyan; }*/
+	25% { opacity: 0.5; background-color: orange; }
+	50% { opacity: 0.75; background-color: navy; }
+	75% { opacity: 0.4; background-color: teal; }
 	100% { opacity: 0; background-color: cyan; display: none;}
 }
 

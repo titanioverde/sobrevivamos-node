@@ -87,12 +87,16 @@ function nextWeek() {
 				$("#reports").html(text + " " + status);
 			},
 			beforeSend: function() {
-				$("input#next_week").attr("disabled", "true");
-				$("div#cover-animation").show().addClass("start-timeflows");
-				setTimeout(function() { $("div#cover-animation").removeClass("start-timeflows").hide(); }, 5000);
+				$("input").attr("disabled", "true");
 			},
 			success: function() {
-				getJSON($("input#next_week").removeAttr("disabled"));
+				$("audio#sound-ticktock")[0].play();
+				$("div#cover-animation").show().addClass("start-timeflows");
+				setTimeout(function() {
+					$("div#cover-animation").removeClass("start-timeflows").hide();
+					$("audio#sound-bell")[0].play();
+					getJSON($("input").removeAttr("disabled"));
+					}, 4000);
 			},
 			
 		});

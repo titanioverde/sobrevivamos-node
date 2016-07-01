@@ -89,6 +89,7 @@
 	"townUnknown": "Este pueblo nunca existió o ya no existe.",
 	"townTypeUnknown": "Tipo de pueblo desconocido",
 	
+	"startReport": "Gracias por venir, __user__. Los supervivientes necesitamos tu ayuda. Si no sabes cómo hacerlo, por favor, consulta el Manual de instrucciones en la barra superior.",
 	"inhabPulmony": "Habitantes muertos por pulmonía",
 	"sheepPulmony": "Ovejas muertas por pulmonía",
 	"inhabHunger": "Habitantes muertos de hambre",
@@ -120,6 +121,7 @@
 	"buildersTip": "+2 Estructura por semana y Constructor. Se necesita 6 por Habitante, y 1 por Oveja.",
 	"defendersTip": "+1 Seguridad por semana y Defensor. 5 Seguridad extra por Defensor actual.",
 	"cleanersTip": "-7% Residuos por semana y Limpiador. +3% o menos por Trabajador y Oveja.",
+	"sheepTip": "Hasta +3 Alimento por semana y Oveja viva. Matadero: +15 Alimento y +5 Seguridad, o +10% Residuos si está enferma.",
 	
 	"testring": "Probando"
 }

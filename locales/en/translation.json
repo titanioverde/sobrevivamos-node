@@ -120,6 +120,7 @@
 	"buildersTip": "+2 Structure per week and Builder. 6 needed per Inhabitant. 1 needed per Sheep.",
 	"defendersTip": "+1 Safety per week and Defender. 5 extra Safety per current Defender.",
 	"cleanersTip": "-7% Garbage per week and Cleaner. +3% or less per Worker and Sheep.",
+	"sheepTip": "Until +3 Food per week and living Sheep. Butcher: +15 Food and +5 Safety or, if sick, +10% Garbage.",
 	
 	"testring": "Check!"
 }

@@ -6,8 +6,6 @@ script(src="/json.js")
 
 		
 #container.container
-		h6.instructions
-			a(href="https://docs.google.com/document/d/1BjqkJ2OBo47FrYEVMpwbxoaB-GOSuUFA1wktSfEJQe0/edit?usp=sharing")= t("booklet")
 		.tryAgain
 			p= t("gameOver")
 			p
@@ -23,30 +21,33 @@ script(src="/json.js")
 						
 								h3
 									= t("Week")
-									| &nbsp;
+									span &nbsp;
 									span#week 0
 						
 								h4
 									= t("Score")
-									| &nbsp;
+									span &nbsp;
 									span#score ...
 						
 								h5
 									= t("Inhabitants")
-									| &nbsp;
+									span &nbsp;
 									span#inhabitants 0
 						
 								h5
 									= t("Idles")
-									| &nbsp;
+									span &nbsp;
 									span#idles 0
 						
 								h5
 									= t("Sheeps")
-									| &nbsp;
+									span &nbsp;
 									span#sheeps 0
 									br
 									button(id="killSheep", class="btn btn-danger btn-xs")= t("Butcher")
+									span &nbsp;&nbsp;
+									a(href="#", data-toggle="popover", data-content=t("sheepTip"), data-trigger="focus", data-placement="top")
+										span.glyphicon.glyphicon-question-sign
 						.col-md-10
 								.row
 										.col-md-6

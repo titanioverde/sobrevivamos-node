@@ -97,9 +97,9 @@ label.controls {
 }
 
 div#reports-frame {
-	border-style: dashed;
+	border-style: dotted;
 	border-width: 2px;
-	border-color: yellow;
+	border-color: silver;
 	overflow-x: hidden;
 	overflow-y: hidden;
 	position: relative;

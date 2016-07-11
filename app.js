@@ -1,6 +1,7 @@
 //Pues Sobrevivamos / Then Let's Survive API
 
 //Node.js modules
+var path = require("path");
 var http = require("http");
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -10,22 +11,22 @@ var redis = require("redis");
 var RedisStore = require("connect-redis")(session);
 var client = redis.createClient();
 var i18n = require("i18next");
-var i18n_options = require("./config/i18next.json");
+var i18n_options = require(path.join(__dirname + "/config/i18next.json"));
 i18n.init(i18n_options);
 var t = i18n.t;
 
 //The game core
-var sobrevivamos = require("./sobrevivamos");
+var sobrevivamos = require(path.join(__dirname + "/sobrevivamos"));
 
 //Everything for Express framework
 var app = express();
-app.use(express.static("./static"));
+app.use(express.static(path.join(__dirname + "/static")));
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({ key: "sobrevivamos-session", cookie: {maxAge: 604801000}, secret: "Zas!!", store: new RedisStore() }));
 //app.use(passport.initialize());
 app.set("view engine", "jade");
-app.set("views", "./views");
+app.set("views", path.join(__dirname + "/views"));
 app.use(i18n.handle);
 app.use(app.router);
 i18n.registerAppHelper(app);

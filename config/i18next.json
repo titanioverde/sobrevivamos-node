@@ -3,5 +3,6 @@
 	"cookieName": "sobrevivamos-lang",
 	"preload": ["en", "es"],
 	"fallbackLng": "en",
-	"debug": false
+	"debug": false,
+	"resGetPath": "/home/titanioverde/sobrevivamos-node/locales/__lng__/translation.json"
 }

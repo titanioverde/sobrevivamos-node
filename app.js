@@ -363,16 +363,51 @@ var profile = app.get("/profile/:user", function(req, res) {
 	});
 });
 
-var profile_edit = app.get("/profile-edit", function(req, res) {
+//Profile edit form. Exclusively for current logged in user.
+var profile_edit_get = app.get("/profile-edit", function(req, res) {
 	var sessionID = sessionRead(req, res);
 	client.hexists("users:" + sessionID, "password", function(err, result) {
 		if (err) { res.send(500, t("profileError") + err); } //ToDo: Not exactly this error.
 		if (!result) { res.send(404, t("userUnknown")); }
-		client.hmget("users:" + sessionID, "fullName", "email", "bio", "location", "url", function(err, replies) {
+		client.hmget("users:" + sessionID, "fullName", "email", "bio", "url", "location", function(err, replies) {
 			console.log(replies);
 			res.render("profile-edit", {profile: replies, sessionID: sessionID, isGuest: isGuest(sessionID)});
 		});
 	});
+});
+
+var profile_edit_post = app.post("/profile-edit", bodyParser(), function (req, res) {
+	var sessionID = sessionRead(req, res);
+	var body = req.body;
+	if (body.fullName == "") body.FullName = sessionID;
+	client.hexists("users:" + sessionID, "password", function (err, user) {
+		if (err) { res.render("profile-edit", {message: t("dbError"), sessionID: sessionID, isGuest: isGuest(sessionID)}); }
+		else {
+			if (body.password != "") {
+				client.hmset("users:" + sessionID, "password", body.password,
+							 "fullName", body.fullName, "email", body.email,
+							 "bio", body.bio, "location", body.location,
+							 "url", body.url, function(err, replies) {
+					if (err) {
+						res.send(500, err);
+					} else {
+						res.redirect("/profile");
+					}
+				});
+			} else {
+				client.hmset("users:" + sessionID, 
+							 "fullName", body.fullName, "email", body.email,
+							 "bio", body.bio, "location", body.location,
+							 "url", body.url, function(err, replies) {
+					if (err) {
+						res.send(500, err);
+					} else {
+						res.redirect("/profile");
+					}
+				});
+			}
+	}
+});
 });
 
 var first_page = app.get("/", function (req, res) {

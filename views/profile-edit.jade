@@ -1,0 +1,32 @@
+include ./header.jade
+		
+#container.container
+	h1= t("profile-edit")
+	h4 #{message}
+	#profile-form
+		form(method="post", action="profile-edit")
+			div
+				label= t("fullName")
+				input(type="text", maxlength="32", name="fullName", id="form-fullName", value="#{profile[0]}", required)
+			div
+				label= t("email")
+				input(type="email", maxlength="64", name="email", id="form-email", value="#{profile[1]}", required)
+			h4= t("modifyPasswordIf")
+			div
+				label= t("Password")
+				input(type="password", maxlength="16", name="password", id="form-password", placeholder=t("changePassword1"), required)
+			div
+				label= t("passwordAgain")
+				input(type="password", maxlength="16", id="form-password2", required)
+			h4= t("optionalInfo")
+			div
+				label= t("Bio")
+				input(type="text", placeholder=t("Bio1"), maxlength="140", name="bio", id="form-bio", value="#{profile[2]}")
+			div
+				label= t("URL")
+				input(type="url", placeholder=t("URL1"), maxlength="140", name="url", id="form-url", value="#{profile[3]}")
+			div
+				label= t("Location")
+				input(type="text", placeholder=t("Location1"), maxlength="64", name="location", id="form-location", value="#{profile[4]}")
+			div
+				input(type="submit")

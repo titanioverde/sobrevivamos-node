@@ -363,6 +363,17 @@ var profile = app.get("/profile/:user", function(req, res) {
 	});
 });
 
+var profile_edit = app.get("/profile-edit", function(req, res) {
+	var sessionID = sessionRead(req, res);
+	client.hexists("users:" + sessionID, "password", function(err, result) {
+		if (err) { res.send(500, t("profileError") + err); } //ToDo: Not exactly this error.
+		if (!result) { res.send(404, t("userUnknown")); }
+		client.hmget("users:" + sessionID, "fullName", "email", "bio", "location", "url", function(err, replies) {
+			console.log(replies);
+			res.render("profile-edit", {profile: replies, sessionID: sessionID, isGuest: isGuest(sessionID)});
+		});
+	});
+});
 
 var first_page = app.get("/", function (req, res) {
 	res.render("first");

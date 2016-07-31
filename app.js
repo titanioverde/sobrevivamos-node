@@ -6,6 +6,7 @@ var http = require("http");
 var express = require("express");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
+var md5 = require("md5");
 var session = require("express-session");
 var redis = require("redis");
 var RedisStore = require("connect-redis")(session);
@@ -300,7 +301,7 @@ var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 			if (err) { res.render("signup", {message: t("dbError"), sessionID: sessionID, isGuest: isGuest(sessionID)}); }
 			if (user) { res.render("signup", {message: t("existingUser"), sessionID: sessionID, isGuest: isGuest(sessionID)}); }
 			else {
-				client.hmset("users:" + body.username, "password", body.password,
+				client.hmset("users:" + body.username, "password", md5(body.password),
 							 "fullName", body.fullName, "email", body.email,
 							 "bio", body.bio, "location", body.location,
 							 "url", body.url, function(err, replies) {
@@ -324,7 +325,7 @@ var login_get = app.get("/login", function(req, res) {
 //Login process
 var login_post = app.post("/login", bodyParser(), function(req, res) {
 	var username = req.body.username;
-	var password = req.body.password;
+	var password = md5(req.body.password);
 	client.hexists("users:" + username, "password", function (err, user) {
 		if (err) { res.send(500, t("loginError") + err); }
 		if (!user) { res.send(404, t("userUnknown")); }
@@ -384,7 +385,7 @@ var profile_edit_post = app.post("/profile-edit", bodyParser(), function (req, r
 		if (err) { res.render("profile-edit", {message: t("dbError"), sessionID: sessionID, isGuest: isGuest(sessionID)}); }
 		else {
 			if (body.password != "") {
-				client.hmset("users:" + sessionID, "password", body.password,
+				client.hmset("users:" + sessionID, "password", md5(body.password),
 							 "fullName", body.fullName, "email", body.email,
 							 "bio", body.bio, "location", body.location,
 							 "url", body.url, function(err, replies) {

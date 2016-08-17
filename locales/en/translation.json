@@ -46,6 +46,7 @@
 	"login": "Log in",
 	"logout": "Log out",
 	"yourProfile": "Your profile",
+	"profile-edit": "Edit your profile",
 	"signup": "Sign up",
 	"pleaseRegister": "Please register.",
 	"townList": "List of your towns",
@@ -89,6 +90,7 @@
 	"townUnknown": "This town never existed or does not exist anymore.",
 	"townTypeUnknown": "Town type unknown",
 	
+	"startReport": "Thank you for coming, __user__. We survivors are asking for your assistance. If you need to know how to, please read the Instructions booklet at the upper bar.",
 	"inhabPulmony": "Dead inhabitants by pulmony",
 	"sheepPulmony": "Dead sheeps by pulmony",
 	"inhabHunger": "Dead inhabitants by hunger",
@@ -120,7 +122,12 @@
 	"buildersTip": "+2 Structure per week and Builder. 6 needed per Inhabitant. 1 needed per Sheep.",
 	"defendersTip": "+1 Safety per week and Defender. 5 extra Safety per current Defender.",
 	"cleanersTip": "-7% Garbage per week and Cleaner. +3% or less per Worker and Sheep.",
-	"sheepTip": "Until +3 Food per week and living Sheep. Butcher: +15 Food and +5 Safety or, if sick, +10% Garbage.",
+	"sheepTip": "Up to +3 Food per week and living Sheep. Butcher: +15 Food and +5 Safety, or +10% Garbage if sick.",
+	
+	"notEnoughPeopleAlert": "You assigned too many inhabitants. Please, check again your commands.",
+	"sickSheepAlert": "Unfortunately this sheep was sick. We cannot take profit from it.",
+	"connectionErrorAlert": "Communication error. Check your connection, and try again.",
+	"serverErrorAlert": "Server error. Try again in a few minutes, or let the developer know.",
 	
 	"testring": "Check!"
 }

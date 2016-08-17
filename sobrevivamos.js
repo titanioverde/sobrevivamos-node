@@ -126,7 +126,6 @@ exports.Town = function(town) {
 	
 	//Static food consumed in a turn.
 	this.foodEaten = function() {
-		console.log(this.contents);
 		var food = ((this.contents["builders"] +
 					 this.contents["defenders"] +
 					 this.contents["cleaners"]) * 3) +
@@ -499,7 +498,6 @@ exports.Town = function(town) {
 			}
 		}		
 		
-		console.log(this.statistics);
 		callback();
 		
 	}

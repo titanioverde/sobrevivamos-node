@@ -46,6 +46,7 @@
 	"login": "Iniciar sesión",
 	"logout": "Cerrar sesión",
 	"yourProfile": "Tu perfil",
+	"profile-edit": "Modificar tu perfil",
 	"signup": "Registrar usuario",
 	"pleaseRegister": "Por favor, regístrate.",
 	"townList": "Listado de tus pueblos",
@@ -122,6 +123,11 @@
 	"defendersTip": "+1 Seguridad por semana y Defensor. 5 Seguridad extra por Defensor actual.",
 	"cleanersTip": "-7% Residuos por semana y Limpiador. +3% o menos por Trabajador y Oveja.",
 	"sheepTip": "Hasta +3 Alimento por semana y Oveja viva. Matadero: +15 Alimento y +5 Seguridad, o +10% Residuos si está enferma.",
+	
+	"notEnoughPeopleAlert": "Has asignado demasiados habitantes. Revisa tus órdenes, por favor.",
+	"sickSheepAlert": "Lamentablemente esta oveja estaba enferma. No se puede aprovechar.",
+	"connectionErrorAlert": "Error de comunicación. Revisa tu conexión, y vuelve a intentarlo.",
+	"serverErrorAlert": "Error del servidor. Vuelve a intentarlo dentro de unos minutos, o avisa al desarrollador.",
 	
 	"testring": "Probando"
 }

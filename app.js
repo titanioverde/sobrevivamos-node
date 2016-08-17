@@ -43,7 +43,6 @@ var difficulties = {
 }
 
 var isGuest = function(username) {
-	console.log(username);
 	return /s{1}\d{7}/.test(username);
 }
 
@@ -269,7 +268,6 @@ var hasSpace = function (text) {
 
 //Provisional sessions
 var sessionRead = function (req, res, callback) {
-	console.log(req.session.ownerID);
 	var ownerID = 0;	
 	if (!(req.session.ownerID)) {
 		ownerID = "s" + Math.round((Math.random() * 9000000) + 1000000);
@@ -371,7 +369,6 @@ var profile_edit_get = app.get("/profile-edit", function(req, res) {
 		if (err) { res.send(500, t("profileError") + err); } //ToDo: Not exactly this error.
 		if (!result) { res.send(404, t("userUnknown")); }
 		client.hmget("users:" + sessionID, "fullName", "email", "bio", "url", "location", function(err, replies) {
-			console.log(replies);
 			res.render("profile-edit", {profile: replies, sessionID: sessionID, isGuest: isGuest(sessionID)});
 		});
 	});

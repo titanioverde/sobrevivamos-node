@@ -6,7 +6,7 @@ script(src="/json.js")
 
 		
 #container.container
-		.tryAgain
+		.alert.alert-info#tryAgain
 			p= t("gameOver")
 			p
 				a(href="/new_town")= t("tryAgain")
@@ -44,6 +44,7 @@ script(src="/json.js")
 									span &nbsp;
 									span#sheeps 0
 									br
+									div#alertSheep.alert.alert-warning= t("sickSheepAlert")
 									button(id="killSheep", class="btn btn-danger btn-xs")= t("Butcher")
 									span &nbsp;&nbsp;
 									a(href="#", data-toggle="popover", data-content=t("sheepTip"), data-trigger="focus", data-placement="top")
@@ -120,6 +121,9 @@ script(src="/json.js")
 																input(type="checkbox", name="allowForeigners", id="allowForeigners_control")
 																= t("allowForeigners")
 										.col-md-6.final-controls
+												div#alertConnection.alert.alert-danger= t("connectionErrorAlert")
+												div#alertServer.alert.alert-danger= t("serverErrorAlert")
+												div#alertPeople.alert.alert-warning= t("notEnoughPeopleAlert")
 												.final-controls
 														input(type="hidden", id="town_id", name="town_id", value="#{town_id}")
 														button(id="next_week", class="btn btn-success")= t("endTurn")

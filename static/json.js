@@ -5,7 +5,7 @@ var main_jobs = ["gatherers", "builders", "defenders", "cleaners"],
 
 function refreshSpan(namey, town) {
 	$("span#" + namey).text(town[namey]);
-}
+} //namey = every updatable stats span, to search by element id.
 
 //For number inputs.
 //ToDo: must use when loading page.
@@ -70,7 +70,7 @@ function gameIsOver(town) {
 	if (town.gameOver) {
 		$("button#killSheep").attr("disabled", "true");
 		$("input#next_week").attr("disabled", "true");
-		$("div.tryAgain").show();
+		$("div#tryAgain").slideDown();
 	}
 }
 
@@ -78,6 +78,7 @@ function gameIsOver(town) {
 function nextWeek() {
 	if (town.idles < 0) {
 		$("span#idles").addClass("warning_fail");
+		$("div#alertPeople").slideDown().delay(5000).slideUp();
 		setTimeout(function() { $("span#idles").removeClass("warning_fail") }, 2100);
 	} else {
 		$.ajax("/send", {
@@ -85,6 +86,14 @@ function nextWeek() {
 			type: "post",
 			error: function(data, text, status) {
 				$("#reports").html(text + " " + status);
+			},
+			statusCode: {
+				404: function() {
+					$("div#alertConnection").slideDown().delay(10000).slideUp();
+				},
+				500: function() {
+					$("div#alertServer").slideDown().delat(10000).slideUp();
+				}
 			},
 			beforeSend: function() {
 				$("input").attr("disabled", "true");
@@ -125,6 +134,7 @@ function killSheep() {
 						$("span#sheeps").addClass("warning_success");
 					} else {
 						$("span#sheeps").addClass("warning_fail");
+						$("div#alertSheep").slideDown().delay(5000).slideUp();
 					}
 					$("button#killSheep").removeAttr("disabled").removeClass("active");
 					$("input#next_week").removeAttr("disabled").removeClass("active");

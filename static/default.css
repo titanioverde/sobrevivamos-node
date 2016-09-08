@@ -151,3 +151,8 @@ div#cover-animation {
 .start-timeflows {
 	animation-name: timeflows;
 }
+
+.alert {
+	display: none;
+	text-align: center;
+}

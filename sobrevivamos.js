@@ -383,7 +383,9 @@ exports.Town = function(town) {
 		}
 		
 		if (weeks <= 0) {
-			this.contents["weeksWithoutDisaster"] = parseInt(7 + (Math.random() * 5) - (this.contents["difficulty"]));
+			var weeksWithoutDisaster =  parseInt(7 + (Math.random() * 5) - (this.contents["difficulty"]));
+			if (weeksWithoutDisaster < 6) weeksWithoutDisaster = 6;
+			this.contents["weeksWithoutDisaster"] = weeksWithoutDisaster;
 		}
 		
 		return result;

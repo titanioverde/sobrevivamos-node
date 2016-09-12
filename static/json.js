@@ -69,7 +69,7 @@ function refreshReports(reports) {
 function gameIsOver(town) {
 	if (town.gameOver) {
 		$("button#killSheep").attr("disabled", "true");
-		$("input#next_week").attr("disabled", "true");
+		$("button#next_week").attr("disabled", "true");
 		$("div#tryAgain").slideDown();
 	}
 }
@@ -97,6 +97,7 @@ function nextWeek() {
 			},
 			beforeSend: function() {
 				$("input").attr("disabled", "true");
+				$("button").attr("disabled", "true");
 			},
 			success: function() {
 				$("audio#sound-ticktock")[0].play();
@@ -104,7 +105,13 @@ function nextWeek() {
 				setTimeout(function() {
 					$("div#cover-animation").removeClass("start-timeflows").hide();
 					$("audio#sound-bell")[0].play();
-					getJSON($("input").removeAttr("disabled"));
+					getJSON(function() {
+						console.log(town.gameOver);
+						if (!(town.gameOver)) {
+							$("input").removeAttr("disabled");
+							$("button").removeAttr("disabled");
+							}
+						});
 					}, 4000);
 			},
 			

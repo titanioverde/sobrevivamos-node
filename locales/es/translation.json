@@ -129,5 +129,8 @@
 	"connectionErrorAlert": "Error de comunicación. Revisa tu conexión, y vuelve a intentarlo.",
 	"serverErrorAlert": "Error del servidor. Vuelve a intentarlo dentro de unos minutos, o avisa al desarrollador.",
 	
+	"about": "Acerca de Pues Sobrevivamos",
+	"sourceCode": "Código fuente",
+	
 	"testring": "Probando"
 }

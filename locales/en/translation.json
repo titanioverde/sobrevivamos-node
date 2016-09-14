@@ -129,5 +129,8 @@
 	"connectionErrorAlert": "Communication error. Check your connection, and try again.",
 	"serverErrorAlert": "Server error. Try again in a few minutes, or let the developer know.",
 	
+	"about": "About Then Let's Survive",
+	"sourceCode": "Source code",
+	
 	"testring": "Check!"
 }

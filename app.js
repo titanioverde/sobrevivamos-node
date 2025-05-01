@@ -10,7 +10,7 @@ var md5 = require("md5");
 var session = require("express-session");
 var redis = require("redis");
 var RedisStore = require("connect-redis")(session);
-var client = redis.createClient();
+var client = redis.createClient(process.env.REDIS_URL || 'redis://localhost:6379');
 var i18n = require("i18next");
 var i18n_options = require(path.join(__dirname + "/config/i18next.json"));
 i18n.init(i18n_options);

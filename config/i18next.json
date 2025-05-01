@@ -4,5 +4,5 @@
 	"preload": ["en", "es"],
 	"fallbackLng": "en",
 	"debug": false,
-	"resGetPath": "/home/titanioverde/sobrevivamos-node/locales/__lng__/translation.json"
+	"resGetPath": "locales/__lng__/translation.json"
 }

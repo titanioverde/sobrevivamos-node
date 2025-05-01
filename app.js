@@ -24,7 +24,7 @@ var app = express();
 app.use(express.static(path.join(__dirname + "/static")));
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(session({ key: "sobrevivamos-session", cookie: {maxAge: 604801000}, secret: "Zas!!", store: new RedisStore() }));
+app.use(session({ key: "sobrevivamos-session", cookie: {maxAge: 604801000}, secret: "Zas!!", store: new RedisStore({client: client}) }));
 //app.use(passport.initialize());
 app.set("view engine", "jade");
 app.set("views", path.join(__dirname + "/views"));

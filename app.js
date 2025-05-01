@@ -10,7 +10,21 @@ var md5 = require("md5");
 var session = require("express-session");
 var redis = require("redis");
 var RedisStore = require("connect-redis")(session);
-var client = redis.createClient(process.env.REDIS_URL || 'redis://localhost:6379');
+var client = redis.createClient({
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
+    password: process.env.REDIS_PASSWORD,
+    retry_strategy: function (options) {
+        if (options.total_retry_time > 1000 * 60 * 60) {
+            return new Error('Retry time exhausted');
+        }
+        return Math.min(options.attempt * 100, 3000);
+    }
+});
+
+client.on('error', function(err) {
+    console.error('Redis error:', err);
+});
+
 var i18n = require("i18next");
 var i18n_options = require(path.join(__dirname + "/config/i18next.json"));
 i18n.init(i18n_options);
@@ -24,7 +38,19 @@ var app = express();
 app.use(express.static(path.join(__dirname + "/static")));
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(session({ key: "sobrevivamos-session", cookie: {maxAge: 604801000}, secret: "Zas!!", store: new RedisStore({client: client}) }));
+app.use(session({ 
+    key: "sobrevivamos-session", 
+    cookie: {
+        maxAge: 604801000,
+	}, 
+    secret: process.env.SESSION_SECRET || "Zas!!", // Use environment variable
+    store: new RedisStore({
+        client: client,
+        prefix: 'sess:',
+        ttl: 864000,       // Session TTL in seconds
+        disableTouch: false
+    })
+}));
 //app.use(passport.initialize());
 app.set("view engine", "jade");
 app.set("views", path.join(__dirname + "/views"));

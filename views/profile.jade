@@ -2,15 +2,14 @@ include ./header.jade
 		
 #container.container
 		h3= t("whoProfile", {user: profile[0]})
-		p #{profile[1]}
 		p
 				=t("Location")
-				span :&nbsp;#{profile[2]}
+				span :&nbsp;#{profile[1]}
 		p
-			a(href="#{profile[3]}") #{profile[3]}
+			a(href="#{profile[2]}") #{profile[2]}
 		//- p
 		//-		=t("LastTime")
-		//-		span :&nbsp;#{profile[4]}
+		//-		span :&nbsp;#{profile[3]}
 		
 		p
 			a(href="/town_list/#{username}")= t("townList1")

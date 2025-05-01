@@ -300,7 +300,7 @@ var signup_post = app.post("/signup", bodyParser(), function(req, res) {
 			if (user) { res.render("signup", {message: t("existingUser"), sessionID: sessionID, isGuest: isGuest(sessionID)}); }
 			else {
 				client.hmset("users:" + body.username, "password", md5(body.password),
-							 "fullName", body.fullName, "email", body.email,
+							 "fullName", body.fullName,
 							 "bio", body.bio, "location", body.location,
 							 "url", body.url, function(err, replies) {
 					if (err) {
@@ -368,7 +368,7 @@ var profile_edit_get = app.get("/profile-edit", function(req, res) {
 	client.hexists("users:" + sessionID, "password", function(err, result) {
 		if (err) { res.send(500, t("profileError") + err); } //ToDo: Not exactly this error.
 		if (!result) { res.send(404, t("userUnknown")); }
-		client.hmget("users:" + sessionID, "fullName", "email", "bio", "url", "location", function(err, replies) {
+		client.hmget("users:" + sessionID, "fullName", "bio", "url", "location", function(err, replies) {
 			res.render("profile-edit", {profile: replies, sessionID: sessionID, isGuest: isGuest(sessionID)});
 		});
 	});
@@ -383,7 +383,7 @@ var profile_edit_post = app.post("/profile-edit", bodyParser(), function (req, r
 		else {
 			if (body.password != "") {
 				client.hmset("users:" + sessionID, "password", md5(body.password),
-							 "fullName", body.fullName, "email", body.email,
+							 "fullName", body.fullName,
 							 "bio", body.bio, "location", body.location,
 							 "url", body.url, function(err, replies) {
 					if (err) {
@@ -394,7 +394,7 @@ var profile_edit_post = app.post("/profile-edit", bodyParser(), function (req, r
 				});
 			} else {
 				client.hmset("users:" + sessionID, 
-							 "fullName", body.fullName, "email", body.email,
+							 "fullName", body.fullName,
 							 "bio", body.bio, "location", body.location,
 							 "url", body.url, function(err, replies) {
 					if (err) {
